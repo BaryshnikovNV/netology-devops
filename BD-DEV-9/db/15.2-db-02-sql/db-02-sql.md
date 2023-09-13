@@ -8,7 +8,7 @@
 
 Решение:
 
-Для запуска PostgreSQ используем Docker. В качестве docker-compose файла используем [docker-compose.yml](.db-02-sql/BD-DEV-9/db/15.2-db-02-sql/config/docker-compose.yml).
+Для запуска PostgreSQ используем Docker. В качестве docker-compose файла используем [docker-compose.yml](.BD-DEV-9/db/15.2-db-02-sql/config/docker-compose.yml).
 
 Запускаем контейнер в фоновом режиме:  
 ```bash
