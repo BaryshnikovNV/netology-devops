@@ -50,7 +50,83 @@ docker exec -it pg_container bash
 
 Решение:
 
+Создаем базу данных test_db под пользователем root:  
+```sql
+createdb test_db -U root
+```
 
+Выполняем подключение к бд test_db:  
+```sql
+psql -d test_db -U root
+```
+
+Создаем пользователя test-admin-user:  
+```sql
+CREATE USER test_admin_user;
+```
+
+В БД создаем таблицу orders:  
+```sql
+CREATE TABLE orders
+(
+   id SERIAL PRIMARY KEY,
+   наименование TEXT,
+   цена INTEGER
+);
+```
+и таблицу clients:  
+```sql
+CREATE TABLE clients
+(
+    id SERIAL PRIMARY KEY,
+    фамилия TEXT,
+    "страна проживания" TEXT,
+    заказ INTEGER,
+    FOREIGN KEY (заказ) REFERENCES orders(id)
+);
+```
+
+Создадим индекс, ускоряющий выборку данных, с именем country_index для поля "страна проживания" таблицы clients:  
+```sql
+CREATE INDEX country_index ON clients ("страна проживания");
+```
+
+Предоставим привилегии на все операции пользователю test-admin-user на таблицу orders БД test_db:  
+```sql
+GRANT ALL ON TABLE orders TO test_admin_user;
+```
+и на таблицу clients:  
+```sql
+GRANT ALL ON TABLE clients TO test_admin_user;
+```
+
+Создадим пользователя test-simple-user:  
+```sql
+CREATE USER test_simple_user;
+```
+
+Предоставим пользователю test-simple-user права на SELECT/INSERT/UPDATE/DELETE таблицы clients БД test_db:  
+```sql
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE clients TO test_simple_user;
+```
+и таблицы orders:  
+```sql
+GRANT SELECT,INSERT,UPDATE,DELETE ON TABLE orders TO test_simple_user;
+```
+
+Скриншот-1 - Итоговый список БД после выполнения пунктов выше.
+![Скриншот-1](https://github.com/BaryshnikovNV/netology-devops/blob/db-02-sql/BD-DEV-9/db/15.2-db-02-sql/img/15.2.2.1_Итоговый_список_БД.png)
+
+Скриншот-2 - Описание таблиц (describe).
+![Скриншот-2](https://github.com/BaryshnikovNV/netology-devops/blob/db-02-sql/BD-DEV-9/db/15.2-db-02-sql/img/15.2.2.2_Описание_таблиц_(describe).png)
+
+SQL-запрос для выдачи списка пользователей с правами над таблицами test_db:  
+```sql
+SELECT grantee, table_catalog, table_name, privilege_type FROM information_schema.table_privileges WHERE table_name IN ('orders','clients');
+```
+
+Скриншот-3 - Список пользователей с правами над таблицами test_db.
+![Скриншот-3](https://github.com/BaryshnikovNV/netology-devops/blob/db-02-sql/BD-DEV-9/db/15.2-db-02-sql/img/15.2.2.3_Cписок_пользователей_с_правами_над_таблицами_test_db.png)
 
 ---
 
