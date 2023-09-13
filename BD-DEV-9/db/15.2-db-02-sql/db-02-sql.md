@@ -8,7 +8,17 @@
 
 Решение:
 
+Для запуска PostgreSQ используем Docker. В качестве docker-compose файла используем [docker-compose.yml](./config/docker-compose.yml).
 
+Запускаем контейнер в фоновом режиме:  
+```bash
+docker compose up -d
+```
+
+Запускаем процесс bash в нутри запущенного контейнера pg_container:  
+```bash
+docker exec -it pg_container bash
+```
 
 ---
 
