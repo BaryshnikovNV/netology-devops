@@ -163,7 +163,29 @@ SELECT grantee, table_catalog, table_name, privilege_type FROM information_schem
 
 Решение:
 
+Наполним таблицы текстовыми данными, указанными в задании выше.
 
+Для таблицы orders:
+```sql
+INSERT INTO orders VALUES (1, 'Шоколад', 10), (2, 'Принтер', 3000), (3, 'Книга', 500), (4, 'Монитор', 7000), (5, 'Гитара', 4000);
+```
+
+Для таблицы clients:
+```sql
+INSERT INTO clients VALUES (1, 'Иванов Иван Иванович', 'USA'), (2, 'Петров Петр Петрович', 'Canada'), (3, 'Иоганн Себастьян Бах', 'Japan'), (4, 'Ронни Джеймс Дио', 'Russia'), (5, 'Ritchie Blackmore', 'Russia');
+```
+
+Для вычисления количества записей в таблицк orders используем запрос:
+```sql
+SELECT COUNT (*) FROM orders;
+```
+для clients:
+```sql
+SELECT COUNT (*) FROM clients;
+```
+
+Скриншот-4 - Скриншот результата выполнения SQL-запросов для вычисления количества записей в таблицах orders и clients.
+![Скриншот-4](https://github.com/BaryshnikovNV/netology-devops/blob/db-02-sql/BD-DEV-9/db/15.2-db-02-sql/img/15.2.3_Результат_выполнения_SQL-запросов_для_вычисления_количества_записей_в_таблицах.png)
 
 ---
 
