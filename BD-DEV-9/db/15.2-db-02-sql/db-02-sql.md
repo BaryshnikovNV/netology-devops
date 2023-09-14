@@ -206,7 +206,24 @@ SELECT COUNT (*) FROM clients;
 
 Решение:
 
+Свяжем таблиы orders и clients с помощью запросов:
+```sql
+UPDATE clients SET заказ=(select id from orders where наименование='Книга') WHERE фамилия='Иванов Иван Иванович';
+```
+```sql
+UPDATE clients SET заказ=(select id from orders where наименование='Монитор') WHERE фамилия='Петров Петр Петрович';
+```
+```sql
+UPDATE clients SET заказ=(select id from orders where наименование='Гитара') WHERE фамилия='Иоганн Себастьян Бах';
+```
 
+Для выдачи всех пользователей, которые совершили заказ используем запрос:
+```sql
+SELECT* FROM clients WHERE заказ IS NOT NULL;
+```
+
+Скриншот-5 - Скриншот вывода запроса для выдачи всех пользователей, которые совершили заказ.
+![Скриншот-5](https://github.com/BaryshnikovNV/netology-devops/blob/db-02-sql/BD-DEV-9/db/15.2-db-02-sql/img/15.2.4_Вывод_запроса_для_выдачи_всех_пользователей,_которые_совершили_заказ.png)
 
 ---
 
