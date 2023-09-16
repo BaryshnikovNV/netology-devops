@@ -273,6 +273,29 @@ EXPLAIN (ANALYZE) SELECT* FROM clients WHERE заказ IS NOT NULL;
 
 Решение:
 
+Создадим бэкап БД test_db и поместим его в volume, предназначенный для бэкапов:
+```sql
+pg_dump -U root -W test_db > /home/pg_backup/test_db.dump
+```
 
+Остановим контейнер с PostgreSQL:
+```bash
+docker stop pg_container
+```
+
+Поднимем новый пустой контейнер с PostgreSQL:
+```bash
+docker run -d --name pg_container_new -e POSTGRES_PASSWORD=root postgres:12-alpine
+```
+
+Восстановим БД test_db в новом контейнере. Скопируем файл дампа из контейнера pg_container в контейнер pg_container_new:
+```bash
+docker cp pg_container:/home/pg_backup/test_db.dump /home && sudo docker cp /home/test_db.dump pg_container_new:/home/
+```
+
+И восстановим базу:
+```bash
+psql root -W test_db < /home/test_db.dump
+```
 
 ---
