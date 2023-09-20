@@ -126,7 +126,43 @@ SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test';
 
 Решение:
 
+Установка профилирования 'SET profiling = 1':
+```sql
+SET profiling = 1
+```
 
+Посмотрим все выполненные запросы за сессию с временем выполнения:
+```sql
+SHOW PROFILES;
+```
+
+Скриншот 6 - Вывод профилирования команд.
+![Скриншот-6](https://github.com/BaryshnikovNV/netology-devops/blob/db-03-mysql/BD-DEV-9/db/15.3-db-03-mysql/img/15.3.3.1_Вывод_профилирования_команд.png)
+
+Исследуем какой engine используется в таблице БД 'test_db':
+```sql
+SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES where TABLE_SCHEMA = 'MYSQL_DB';
+```
+
+Скриншот 7 - Определение движка.
+![Скриншот-7](https://github.com/BaryshnikovNV/netology-devops/blob/db-03-mysql/BD-DEV-9/db/15.3-db-03-mysql/img/15.3.3.2_Определение_движка.png)
+
+Из скриншота 7 видно, что в таблице БД 'test_db' используется InnoDB.
+
+Изменим engine на MyISAM:
+```sql
+ALTER TABLE MYSQL_DB.orders ENGINE = MyISAM;
+```
+
+Изменим engine на InnoDB:
+```sql
+ALTER TABLE MYSQL_DB.orders ENGINE = InnoDB;
+```
+
+Скриншот 8 - Определение время выполнения запроса.
+![Скриншот-8](https://github.com/BaryshnikovNV/netology-devops/blob/db-03-mysql/BD-DEV-9/db/15.3-db-03-mysql/img/15.3.3.3_Определение_время_выполнения_запроса.png)
+
+Из скриншота 8 видно, что смена движка на MyISAM занимает 0,062 с, а на движок InnoDB - 0,093 c.
 
 ---
 
