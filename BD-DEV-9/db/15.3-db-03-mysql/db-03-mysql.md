@@ -85,12 +85,34 @@ SELECT COUNT(*) FROM orders WHERE price > 300;
   - Фамилия "Pretty"    
   - Имя "James".
   
-Предоставьте привелегии пользователю `test` на операции SELECT базы `test_db`.
+Предоставьте привелегии пользователю `test` на операции SELECT базы `test_db`.  
 Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES, получите данные по пользователю `test` и **приведите в ответе к задаче**.
 
 Решение:
 
+Создание пользователя `test` в БД c паролем test-pass, используя вышеуказанные параметры:
 
+```sql
+CREATE USER 'test'@'localhost' 
+    IDENTIFIED WITH mysql_native_password BY 'test-pass'
+    WITH MAX_CONNECTIONS_PER_HOUR 100
+    PASSWORD EXPIRE INTERVAL 180 DAY
+    FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 2
+    ATTRIBUTE '{"first_name":"James", "last_name":"Pretty"}';
+```
+
+Предоставление привелегий пользователю 'test' на операции SELECT базы 'test_db':
+```sql
+GRANT SELECT ON lodyanyy_db.* to 'test'@'localhost';
+```
+
+Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получим данные по пользователю 'test':
+```sql
+SELECT * from INFORMATION_SCHEMA.USER_ATTRIBUTES where USER = 'test';
+```
+
+Скриншот 5 - Получение данных по пользователю test.
+![Скриншот-5](https://github.com/BaryshnikovNV/netology-devops/blob/db-03-mysql/BD-DEV-9/db/15.3-db-03-mysql/img/15.3.2.1_Получение_данных_по_пользователю_test.png)
 
 ---
 
