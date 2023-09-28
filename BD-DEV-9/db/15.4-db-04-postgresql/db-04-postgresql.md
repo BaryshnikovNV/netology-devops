@@ -112,7 +112,35 @@ SELECT attname, avg_width FROM pg_stats WHERE tablename='orders';
 
 Решение:
 
+Для проведения данной операции можно использовать следующую SQL-транзакцию:
+```sql
+BEGIN;
+CREATE TABLE orders_1 (LIKE orders);
+INSERT INTO orders_1 SELECT * FROM orders WHERE price >499;
+DELETE FROM orders WHERE price >499;
+CREATE TABLE orders_2 (LIKE orders);
+INSERT INTO orders_2 SELECT * FROM orders WHERE price <=499;
+DELETE FROM orders WHERE price <=499;
+COMMIT;
+```
 
+Для проверки разбиения таблицы `public.orders` можно использовать команду:
+```sql
+SELECT * FROM public.orders;
+```
+для `public.orders_1`:
+```sql
+SELECT * FROM public.orders_1;
+```
+и для `public.orders_2`:
+```sql
+SELECT * FROM public.orders_2;
+```
+
+Скриншот 4 - Разбиение таблицы orders на 2.
+![Скриншот-4](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/img/15.4.3_Разбиение_таблицы_orders_на_2.png)
+
+Изночально исключить "ручное" разбиение при проектировании таблицы orders можно, если при проектировании таблицы сделать ее секционированной, но при этом скорость запросов может ухудшиться.
 
 ---
 
