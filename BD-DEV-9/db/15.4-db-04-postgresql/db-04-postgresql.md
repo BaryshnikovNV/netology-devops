@@ -151,6 +151,14 @@ SELECT * FROM public.orders_2;
 
 Решение:
 
+Используя утилиту `pg_dump` создадим бекап БД `test_database`:
+```bash
+pg_dump -U root -d test_database > /home/test_database_dump.sql
+```
 
+Уникальность значения столбца `title` для таблиц `test_database` можно добавить с помощью индекса:
+```sql
+CREATE unique INDEX title_index ON public.orders(title);
+```
 
 ---
