@@ -15,7 +15,35 @@
 
 Решение:
 
+Для запуска PostgreSQL используем Docker. В качестве docker-compose файла используем [docker-compose.yml](./config/docker-compose.yml).
 
+Запускаем контейнер в фоновом режиме:  
+```bash
+docker compose up -d
+```
+
+Запускаем процесс bash в нутри запущенного контейнера `pg_container`:  
+```bash
+docker exec -it pg_container bash
+```
+
+Запускаем утилиту psql:  
+```bash
+psql postgres
+```
+
+Воспользуемся командой `\?` для вывода подсказки по имеющимся в `psql` управляющим командам.
+
+Скриншот 1 - Вывод подсказки по имеющимся в psql управляющим командам.
+![Скриншот-1](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/img/15.4.1_Вывод_подсказки_по_имеющимся_в_psql_управляющим_командам.png)
+
+C помощью подсказки определим управляющие команды:
+
+- вывод списка БД                        (\l[+]   [PATTERN]      list databases);
+- подключение к БД                       ( \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo} connect to new database (currently "postgres"));
+- вывод списка таблиц                    (\dt[S+] [PATTERN]      list tables);
+- вывода описания содержимого таблиц     (\d[S+]  NAME           describe table, view, sequence, or index);
+- выхода из psql                         (\q                     quit psql).
 
 ---
 
