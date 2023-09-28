@@ -59,7 +59,48 @@ C помощью подсказки определим управляющие к
 
 Решение:
 
+Скопируем файл дампа в запущенный контейнер:
+```bash
+docker cp test_dump.sql pg_container:/var/tmp/test_dump.sql
+```
 
+Создаем базу данных test_database:
+```sql
+CREATE DATABASE test_database;
+```
+
+И восстановим бэкап БД в `test_database`:
+```bash
+psql -U root -d test_database < /var/tmp/test_dump.sql
+```
+
+Скриншот 2 - Восстановление бэкапа.
+![Скриншот-2](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/img/15.4.2.1_Восстановление_бэкапа.png)
+
+Подключимся к восстановленной БД:
+```bash
+psql -U root -d test_database
+```
+
+Посмотрим список существующих таблиц:
+```bash
+\dt
+```
+
+Проведем операцию ANALYZE для сбора статистики по таблице:
+```sql
+ANALYZE verbose orders;
+```
+
+Найдем столбец таблицы `orders` с наибольшим средним значением размера элементов в байтах:
+```sql
+SELECT attname, avg_width FROM pg_stats WHERE tablename='orders';
+```
+
+Скриншот 3 - Нахождение столбца таблицы orders с наибольшим средним значением размера элементов в байтах.
+![Скриншот-3](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/img/15.4.2.2_Нахождение_столбца_таблицы_orders.png)
+
+Таким столбцом является title.
 
 ---
 
