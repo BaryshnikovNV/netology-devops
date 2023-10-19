@@ -10,3 +10,7 @@
 15.3. [MySQL](https://github.com/BaryshnikovNV/netology-devops/blob/db-03-mysql/BD-DEV-9/db/15.3-db-03-mysql/db-03-mysql.md)
 
 15.4. [PostgreSQL](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/db-04-postgresql.md)
+
+
+
+15.6. [Troubleshooting](https://github.com/BaryshnikovNV/netology-devops/blob/db-06-troubleshooting/BD-DEV-9/db/15.6-db-06-troubleshooting/db-06-troubleshooting.md)
