@@ -48,7 +48,8 @@
 Для Pull модели есть много тонкостей, которые нужно не упустить:  
 1. Желательно установить реверс-прокси, вроде nginx, чтобы запросы не шли напрямую в приложение;
 2. Нужно не забыть закрыть порт nginx хоста в файрволле для всех, кроме сервера мониторинга;
-3. Нужно не забыть настроить экспортёр так, чтобы его порт прослушивался только на 127.0.0.1 (если используется реверс-прокси).  
+3. Нужно не забыть настроить экспортёр так, чтобы его порт прослушивался только на 127.0.0.1 (если используется реверс-прокси).
+
 У Push модели всё проще и от этого безопаснее: главное, “защитить” центральную ноду так, чтобы только приложения могли к ней пробиться, и больше ничего “открывать” не нужно.
 
 ---
@@ -71,7 +72,40 @@
 
 ### Решение:
 
+VirtualBox:
+```bash
+baryshnikov@debian:~$ virtualbox -h
+Oracle VM VirtualBox VM Selector v7.0.12
+Copyright (C) 2005-2023 Oracle and/or its affiliates
 
+No special options.
+
+If you are looking for --startvm and related options, you need to use VirtualBoxVM.
+```
+
+Vagrant:
+```bash
+baryshnikov@debian:~$ vagrant --version
+Vagrant 2.3.4
+```
+
+Terraform:
+```bash
+baryshnikov@debian:~$ terraform --version
+Terraform v1.6.2
+on linux_amd64
+```
+
+Ansible:
+```bash
+baryshnikov@debian:~$ ansible --version
+ansible 2.10.8
+  config file = None
+  configured module search path = ['/home/baryshnikov/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3/dist-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.9.2 (default, Feb 28 2021, 17:03:44) [GCC 10.2.1 20210110]
+```
 
 ---
 
