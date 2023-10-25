@@ -140,6 +140,7 @@ Error: The requested URL returned error: 404:
 
 ### Решение:
 
-
+Скриншот 1 - Создание виртуальной машины и установка docker с помощью vagrantfile.
+![Скриншот-1](/VIRTD-35/virt/16.2-virt-02-iaac/img/16.2.4_Практическая_часть_из_лекции.png)
 
 ---
