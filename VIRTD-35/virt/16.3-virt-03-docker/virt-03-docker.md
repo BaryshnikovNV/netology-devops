@@ -133,6 +133,6 @@ touch file2 && seq 20 > file2
 
 ### Решение:
 
-
+Ссылка на Docker-образ из DockerHub: https://hub.docker.com/layers/baryshnikovnv/ansible/2.9.24/images/sha256-cdd71e4153e0f0b739d9dc9274ab9137ee827ca1b6cfa654f017be840f3aef29?context=repo
 
 ---
