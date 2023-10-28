@@ -30,7 +30,7 @@ Hey, Netology
 
 ### Решение:
 
-
+Ссылка на Docker-образ из DockerHub: https://hub.docker.com/layers/baryshnikovnv/nginx/add_index.html/images/sha256-75dd57ddad3f370b5ea6077960e84ba281109fec9b2aa4d368391d01976b6fb7?context=repo
 
 ---
 
