@@ -51,7 +51,7 @@
 ![Скриншот-4](/VIRTD-35/virt/16.4-virt-04-docker-compose/img/16.4.2.2.1_Вывод_команды_terraform_apply.png)
 
 Скриншот 5 - Страница свойств созданной ВМ из личного кабинета Yandex Cloud.
-![Скриншот-4](/VIRTD-35/virt/16.4-virt-04-docker-compose/img/16.4.2.2.2_Страница_свойств_созданной_ВМ_из_личного_кабинета_Yandex_Cloud.png)
+![Скриншот-5](/VIRTD-35/virt/16.4-virt-04-docker-compose/img/16.4.2.2.2_Страница_свойств_созданной_ВМ_из_личного_кабинета_Yandex_Cloud.png)
 
 ---
 
@@ -69,11 +69,15 @@
 
 ### Решение:
 
+Скриншот 6 - Запуск playbook.
+![Скриншот-6](/VIRTD-35/virt/16.4-virt-04-docker-compose/img/16.4.3.1_Запуск_playbook.png)
 
+Скриншот 7 - Состояние всех контейнеров, описанных в docker-compose.
+![Скриншот-7](/VIRTD-35/virt/16.4-virt-04-docker-compose/img/16.4.3.2_Состояние_всех_контейнеров,_описанных_в_docker-compose.png)
 
 ---
 
-## Задание 4 (*).
+## Задание 4.
 <details>
 	<summary></summary>
       <br>
