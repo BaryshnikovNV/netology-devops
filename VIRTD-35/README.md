@@ -8,3 +8,5 @@
 16.2. [Применение принципов IaaC в работе с виртуальными машинами.](https://github.com/BaryshnikovNV/netology-devops/blob/virt-02-iaac/VIRTD-35/virt/16.2-virt-02-iaac/virt-02-iaac.md)
 
 16.3. [Введение. Экосистема. Архитектура. Жизненный цикл Docker-контейнера.](https://github.com/BaryshnikovNV/netology-devops/blob/virt-03-docker/VIRTD-35/virt/16.3-virt-03-docker/virt-03-docker.md)
+
+16.4. [Оркестрация группой Docker контейнеров на примере Docker Compose.](https://github.com/BaryshnikovNV/netology-devops/blob/virt-04-docker-compose/VIRTD-35/virt/16.4-virt-04-docker-compose/virt-04-docker-compose.md)
