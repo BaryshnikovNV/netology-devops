@@ -57,7 +57,15 @@ docker node ls
 
 ### Решение:
 
+Инициализируем Terraform c помощью команды ```terraform init```, проверим план с помощью команды ```terraform plan``` и используем его с помощью команды ```terraform apply```:
 
+Скриншот 1 - Вывод команды ```terraform apply```.
+![Скриншот-1](/VIRTD-35/virt/16.5-virt-05-docker-swarm/img/16.5.2.1_Вывод_команды_terraform_apply.png)
+
+Зайдем на ноду node01 и проверим Docker Swarm-клсатер с помощью команды ```docker node ls```:
+
+Скриншот 2 - Созданный Docker Swarm-кластер в Яндекс.Облаке на 6 нод.
+![Скриншот-2](/VIRTD-35/virt/16.5-virt-05-docker-swarm/img/16.5.2.2_Созданный_Docker_Swarm-кластер_в_Яндекс.Облаке_на_6_нод.png)
 
 ---
 
