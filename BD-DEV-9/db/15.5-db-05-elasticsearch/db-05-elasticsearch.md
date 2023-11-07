@@ -171,6 +171,80 @@ curl -X GET 'http://localhost:9200/_cat/indices?v'
 
 Решение:
 
+Используя API зарегистрируем директорию `/elasticsearch-7.17.14/snapshots` как `snapshot repository` с именем 'netology_backup':
+```bash
+curl -X PUT "localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'
+{
+  "type": "fs",
+  "settings": {
+    "location": "/elasticsearch-7.17.14/snapshots"
+  }
+}'
+```
 
+Запрос API для созданного репозитория:
+```bash
+curl -X GET "localhost:9200/_snapshot/netology_backup?pretty"
+```
+
+Скриншот 5 - Запрос API и результат вызова API для создания репозитория.
+![Скриншот-5](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.3.1_Запрос_API_и_результат_вызова_API_для_создания_репозитория.png)
+
+Создадим индекс `test` с 0 реплик и 1 шардом:
+```bash
+curl -X PUT "localhost:9200/test?pretty" -H 'Content-Type: application/json' -d'{ "settings": { "index": { "number_of_shards": 1, "number_of_replicas": 0 } } }'
+```
+
+Посмотрим список индексов:
+```bash
+curl 'localhost:9200/_cat/indices?v'
+```
+
+Скриншот 6 - Список индексов.
+![Скриншот-6](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.3.2_Список_индексов.png)
+
+Создадим `snapshot` состояния кластера `elasticsearch`:
+```bash
+curl -X PUT "localhost:9200/_snapshot/netology_backup/my_snapshot?pretty"
+```
+
+Зайдем внутрь контейнера и выведем список файлов в директории со `snapshot`ами:
+```bash
+ll -a /elasticsearch-7.17.14/snapshots
+```
+
+Скриншот 7 - Список файлов в директории со `snapshot`ами.
+![Скриншот-7](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.3.3_Список_файлов_в_директории_со_snapshotами.png)
+
+Удалим индекс `test`:
+```bash
+curl -X DELETE "localhost:9200/test?pretty"
+```
+
+Создадим индекс `test-2`:
+```bash
+curl -X PUT "localhost:9200/test-2?pretty" -H 'Content-Type: application/json' -d'{ "settings": { "index": { "number_of_shards": 1, "number_of_replicas": 0 } } }'
+```
+
+Посмотрим список индексов:
+```bash
+curl 'localhost:9200/_cat/indices?v'
+```
+
+Скриншот 8 - Список индексов.
+![Скриншот-8](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.3.4_Список_индексов.png)
+
+Восстановим состояние кластера `elasticsearch` из `snapshot`, созданного ранее:
+```bash
+curl -X POST "localhost:9200/_snapshot/netology_backup/my_snapshot/_restore?pretty" -H 'Content-Type: application/json' -d'{"include_global_state":true}'
+```
+
+Посмотрим итоговый список индексов:
+```bash
+curl 'localhost:9200/_cat/indices?v'
+```
+
+Скриншот 9 - Итоговый список индексов.
+![Скриншот-9](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.3.5_Итоговый_список_индексов.png)
 
 ---
