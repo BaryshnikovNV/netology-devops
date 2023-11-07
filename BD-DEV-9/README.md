@@ -11,6 +11,6 @@
 
 15.4. [PostgreSQL](https://github.com/BaryshnikovNV/netology-devops/blob/db-04-postgresql/BD-DEV-9/db/15.4-db-04-postgresql/db-04-postgresql.md)
 
-
+15.5. [Elasticsearch](https://github.com/BaryshnikovNV/netology-devops/blob/db-05-elasticsearch/BD-DEV-9/db/15.5-db-05-elasticsearch/db-05-elasticsearch.md)
 
 15.6. [Troubleshooting](https://github.com/BaryshnikovNV/netology-devops/blob/db-06-troubleshooting/BD-DEV-9/db/15.6-db-06-troubleshooting/db-06-troubleshooting.md)
