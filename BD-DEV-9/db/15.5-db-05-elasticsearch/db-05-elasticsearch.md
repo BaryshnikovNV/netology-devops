@@ -38,7 +38,22 @@
 
 Решение:
 
+Для запуска Elasticsearch используем Docker. В качестве dockerfile используем [dockerfile](./config/dockerfile), а также конфигурационные файлы [elasticsearch.yml](./config/elasticsearch.yml) и [logging.yml](./config/logging.yml).
 
+Ссылка на образ `elasticsearch` в репозитории [dockerhub](https://hub.docker.com/layers/baryshnikovnv/elasticsearch/7.17.14_add_configs/images/sha256-c8704fb047fb4cf81b9f1b993603bfbf26501896471f5e0f090e5582d0edc0e3?context=explore)
+
+Создадим контейнер `elasticsearch`:
+```bash
+docker run -d --name elasticsearch -p 9200:9200 -p 9300:9300 elasticsearch:7.17.14
+```
+
+Ответ `elasticsearch` на запрос:
+
+```bash
+curl localhost:9200
+```
+Скриншот 1 - Ответ elasticsearch на запрос.
+![Скриншот-1](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.1_Ответ_elasticsearch_на_запрос.png)
 
 ---
 
