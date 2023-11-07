@@ -40,7 +40,7 @@
 
 Для запуска Elasticsearch используем Docker. В качестве dockerfile воспользуемся [dockerfile](./config/dockerfile).
 
-Ссылка на образ `elasticsearch` в репозитории [dockerhub](https://hub.docker.com/layers/baryshnikovnv/elasticsearch/7.17.14_add_configs/images/sha256-c8704fb047fb4cf81b9f1b993603bfbf26501896471f5e0f090e5582d0edc0e3?context=explore)
+Ссылка на образ `elasticsearch` в репозитории [dockerhub](https://hub.docker.com/layers/baryshnikovnv/elasticsearch/7.17.14_add_configs/images/sha256-c8704fb047fb4cf81b9f1b993603bfbf26501896471f5e0f090e5582d0edc0e3?context=explore).
 
 Создадим контейнер `elasticsearch`:
 ```bash
@@ -88,7 +88,52 @@ curl localhost:9200
 
 Решение:
 
+Создадим три индекса в соответствии с заданием:
+```bash
+curl -X PUT localhost:9200/ind-1 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 1,  "number_of_replicas": 0 }}'
+```
 
+```bash
+curl -X PUT localhost:9200/ind-2 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 2,  "number_of_replicas": 1 }}'
+```
+
+```bash
+curl -X PUT localhost:9200/ind-3 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 4,  "number_of_replicas": 2 }}'
+```
+
+Получим список индексов и их статусов, используя API:
+```bash
+curl -X GET 'http://localhost:9200/_cat/indices?v'
+```
+
+Скриншот 2 - Список индексов и их статусов, используя API.
+![Скриншот-2](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.2.1_Список_индексов_и_их_статусов,_используя_API.png)
+
+Получим состояние кластера Elasticsearch, используя API:
+```bash
+curl -XGET localhost:9200/_cluster/health/?pretty=true
+```
+
+Скриншот 3 - Получение состояния кластера Elasticsearch, используя API.
+![Скриншот-3](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.2.2_Получение_состояния_кластера_Elasticsearch,_используя_API.png)
+
+Статус "yellow" указывает на то, что фрагменты реплик не смогли быть распределены по другим узлам. А не могут они быть распределены по другим узлам, потому что в кластере у нас всего лишь одна нода.
+
+Удалим все индексы:
+
+```bash
+curl -X DELETE 'http://localhost:9200/ind-1?pretty';
+curl -X DELETE 'http://localhost:9200/ind-2?pretty';
+curl -X DELETE 'http://localhost:9200/ind-3?pretty'
+```
+
+Убедимся, что индексы удалены:
+```bash
+curl -X GET 'http://localhost:9200/_cat/indices?v'
+```
+
+Скриншот 4 - Удаление всех индексов.
+![Скриншот-4](/BD-DEV-9/db/15.5-db-05-elasticsearch/img/15.5.2.3_Удаление_всех_индексов.png)
 
 ---
 
