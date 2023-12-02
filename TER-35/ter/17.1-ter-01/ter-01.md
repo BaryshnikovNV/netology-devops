@@ -45,7 +45,7 @@
 resource "docker_image" "nginx" {
 ```
 
-Ошибка *Error: Invalid resource name* говорит о неверном имени ресурса. Имя должно начинаться с буквы или символа подчеркивания и может содержать только буквы, цифры, знаки подчеркивания и тире. Следовательно, для исправления ошибки необходимо убрать из начала имени ```1nginx``` цифру 1 и переастативить, например, в конец, тогда строка 28 будет выглядить следующим образом:  
+Ошибка *Invalid resource name* говорит о неверном имени ресурса. Имя должно начинаться с буквы или символа подчеркивания и может содержать только буквы, цифры, знаки подчеркивания и тире. Следовательно, для исправления ошибки необходимо убрать из начала имени ```1nginx``` цифру 1 и переастативить, например, в конец, тогда строка 28 будет выглядить следующим образом:  
 ```HCL
 resource "docker_container" "nginx-1" {
 ```
@@ -87,7 +87,29 @@ resource "docker_container" "nginx-1" {
 1.8.  
 При уничтожении созданных ресурсов с помощью terraform, docker-образ nginx:latest не был удален, потому что опция ```keep_locally``` имела значение **true**.
 
-Cтрочка из документации [**terraform провайдера docker**](https://docs.comcloud.xyz/providers/kreuzwerker/docker/latest/docs):
+Cтрочка из документации [**terraform провайдера docker**](https://docs.comcloud.xyz/providers/kreuzwerker/docker/latest/docs):  
 ```keep_locally``` (Boolean) If true, then the Docker image won't be deleted on destroy operation. If this is false, it will delete the image from the docker local storage on destroy operation.
+
+---
+
+## Задание 2*.
+<details>
+	<summary></summary>
+      <br>
+
+1. Изучите в документации provider [**Virtualbox**](https://docs.comcloud.xyz/providers/shekeriev/virtualbox/latest/docs) от 
+shekeriev.
+2. Создайте с его помощью любую виртуальную машину. Чтобы не использовать VPN, советуем выбрать любой образ с расположением в GitHub из [**списка**](https://www.vagrantbox.es/).
+
+В качестве ответа приложите plan для создаваемого ресурса и скриншот созданного в VB ресурса.
+
+</details>
+
+### Решение:
+
+Скриншот 8 - Создание виртуальной машины с помощью provider Virtualbox от shekeriev.
+![Скриншот-8](/TER-35/ter/17.1-ter-01/img/17.1.2_Создание_виртуальной_машины_с_помощью_provider_Virtualbox_от_shekeriev.png)
+
+После выполнения команды ```terraform apply``` вылезает ошибка "unable to start VM: exit status 1". Причем VM создается, но почему-то не запускается.
 
 ---
