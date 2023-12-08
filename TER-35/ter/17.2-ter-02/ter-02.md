@@ -69,6 +69,7 @@ resource "yandex_compute_instance" "platform" {
 ```
 
 После исправления вышеуказанных ошибок ВМ успешно создается.  
+
 Скриншот 2 - Создание ВМ после исправления ошибок.
 ![Скриншот-2](/TER-35/ter/17.2-ter-02/img/17.2.1.5.2_Создание_ВМ_после_исправления_ошибок.png)
 
@@ -76,6 +77,7 @@ resource "yandex_compute_instance" "platform" {
 ![Скриншот-3](/TER-35/ter/17.2-ter-02/img/17.2.1.5.3_ЛК_Yandex_Cloud_с_созданной_ВМ,_где_видно_внешний_ip-адрес.png)
 
 6. Подключение к консоли ВМ через ssh и выполнение команды ```curl ifconfig.me```.  
+
 Скриншот 4 - Подключение по SSH.
 ![Скриншот-4](/TER-35/ter/17.2-ter-02/img/17.2.1.6_Подключение_по_SSH.png)
 
@@ -164,7 +166,113 @@ variable "vm_web_core_fraction" {
 ```
 
 4. Проверим terraform plan. Изменений нет.  
+
 Скриншот 5 - Выпонение terraform plan.
 ![Скриншот-5](/TER-35/ter/17.2-ter-02/img/17.2.2_Выпонение_terraform_plan.png)
+
+---
+
+## Задание 3.
+<details>
+	<summary></summary>
+      <br>
+
+1. Создайте в корне проекта файл 'vms_platform.tf' . Перенесите в него все переменные первой ВМ.
+2. Скопируйте блок ресурса и создайте с его помощью вторую ВМ в файле main.tf: **"netology-develop-platform-db"** ,  ```cores  = 2, memory = 2, core_fraction = 20```. Объявите её переменные с префиксом **vm_db_** в том же файле ('vms_platform.tf').
+3. Примените изменения.
+
+</details>
+
+### Решение:
+
+1. Создадим в корне проекта файл 'vms_platform.tf'. Перенесем в него все переменные первой ВМ.  
+2. Скопируем блок ресурса и создадим с его помощью вторую ВМ в файле main.tf: **"netology-develop-platform-db"** , ```cores  = 2, memory = 2, core_fraction = 20```. Объявим её переменные с префиксом **vm_db_** в том же файле ('vms_platform.tf').
+
+Содержимое файла 'vms_platform.tf':  
+```HCL
+###yandex_compute_image vars for db
+
+variable "vm_db_family" {
+  type        = string
+  default     = "ubuntu-2004-lts"
+  description = "ubuntu image"
+}
+
+###yandex_compute_instance vars for db
+
+variable "vm_db_name" {
+  type        = string
+  default     = "netology-develop-platform-db"
+  description = "instance name"
+}
+
+variable "vm_db_platform_id" {
+  type        = string
+  default     = "standard-v1"
+  description = "platform ID"
+}
+
+variable "vm_db_cores" {
+  type        = string
+  default     = "2"
+  description = "vCPU numbers"
+}
+
+variable "vm_db_memory" {
+  type        = string
+  default     = "2"
+  description = "VM memory, Gb"
+}
+
+variable "vm_db_core_fraction" {
+  type        = string
+  default     = "20"
+  description = "core fraction"
+}
+```
+
+Добавление второй ВМ в файл main.tf:    
+```HCL
+###VM №2
+
+data "yandex_compute_image" "ubuntu_2" {
+  family = var.vm_db_family
+}
+resource "yandex_compute_instance" "platform_2" {
+  name        = var.vm_db_name
+  platform_id = var.vm_db_platform_id
+  resources {
+    cores         = var.vm_db_cores
+    memory        = var.vm_db_memory
+    core_fraction = var.vm_db_core_fraction
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+    }
+  }
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+  }
+
+  metadata = {
+    serial-port-enable = 1
+    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
+  }
+
+}
+```
+
+3. Применим изменения в конфигурацию выполнив terraform apply.
+
+Скриншот 6 - Применение изменений в конфигурацию.
+![Скриншот-6](/TER-35/ter/17.2-ter-02/img/17.2.3.1_Применение_изменений_в_конфигурацию_выполненив_terraform_apply.png)
+
+Скриншот 7 - ЛК Yandex Cloud с созданной второй ВМ.
+![Скриншот-7](/TER-35/ter/17.2-ter-02/img/17.2.3.2_ЛК_Yandex_Cloud_с_созданной_второй_ВМ.png)
 
 ---
