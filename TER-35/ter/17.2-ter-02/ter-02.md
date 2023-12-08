@@ -310,3 +310,49 @@ output "VMs" {
 ![Скриншот-8](/TER-35/ter/17.2-ter-02/img/17.2.4_Вывод_значений_ip-адресов_с_помощью_команд_terraform_output.png)
 
 ---
+
+## Задание 5.
+<details>
+	<summary></summary>
+      <br>
+
+1. В файле locals.tf опишите в **одном** local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
+2. Замените переменные с именами ВМ из файла variables.tf на созданные вами local-переменные.
+3. Примените изменения.
+
+</details>
+
+### Решение:
+
+1. В файле locals.tf опишем в **одном** local-блоке имя каждой ВМ, используйте интерполяцию ${..} с несколькими переменными по примеру из лекции.
+
+```HCL
+locals {
+  project = "netology-develop-platform"
+  env_web = "web"
+  env_db  = "db"
+  vm_web_instance_name = "${local.project}-${local.env_web}"
+  vm_db_instance_name = "${local.project}-${local.env_db}"
+}
+```
+
+2. Заменим переменные с именами ВМ из файла variables.tf на созданные local-переменные.
+
+```HCL
+resource "yandex_compute_instance" "platform" {
+  name        = local.vm_web_instance_name
+  platform_id = var.vm_web_platform_id
+```  
+и  
+```HCL
+resource "yandex_compute_instance" "platform_2" {
+  name        = local.vm_db_instance_name
+  platform_id = var.vm_db_platform_id
+``` 
+
+3. Применим изменения в конфигурацию выполнив ```terraform apply```.
+
+Скриншот 9 - Применение изменений в конфигурацию выполненив ```terraform apply```.
+![Скриншот-9](/TER-35/ter/17.2-ter-02/img/17.2.5_Применение_изменений_в_конфигурацию_выполненив_terraform_apply.png)
+
+---
