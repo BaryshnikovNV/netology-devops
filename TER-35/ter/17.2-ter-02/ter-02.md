@@ -352,7 +352,133 @@ resource "yandex_compute_instance" "platform_2" {
 
 3. Применим изменения в конфигурацию выполнив ```terraform apply```.
 
-Скриншот 9 - Применение изменений в конфигурацию выполненив ```terraform apply```.
+Скриншот 9 - Примененим изменения в конфигурацию выполненив ```terraform apply```.
 ![Скриншот-9](/TER-35/ter/17.2-ter-02/img/17.2.5_Применение_изменений_в_конфигурацию_выполненив_terraform_apply.png)
+
+---
+
+## Задание 6.
+<details>
+	<summary></summary>
+      <br>
+
+1. Вместо использования трёх переменных  ".._cores",".._memory",".._core_fraction" в блоке  resources {...}, объедините их в единую map-переменную **vms_resources** и  внутри неё конфиги обеих ВМ в виде вложенного map.  
+   ```
+   пример из terraform.tfvars:
+   vms_resources = {
+     web={
+       cores=
+       memory=
+       core_fraction=
+       ...
+     },
+     db= {
+       cores=
+       memory=
+       core_fraction=
+       ...
+     }
+   ```
+3. Создайте и используйте отдельную map переменную для блока metadata, она должна быть общая для всех ваших ВМ.
+   ```
+   пример из terraform.tfvars:
+   metadata = {
+     serial-port-enable = 1
+     ssh-keys           = "ubuntu:ssh-ed25519 AAAAC..."
+   }
+   ```  
+  
+4. Найдите и закоментируйте все, более не используемые переменные проекта.
+5. Проверьте terraform plan. Изменений быть не должно.
+
+------
+
+</details>
+
+### Решение:
+
+1. Вместо использования трёх переменных  ".._cores",".._memory",".._core_fraction" в блоке  resources {...}, объединим их в единую map-переменную **vms_resources** и внутри неё конфиги обеих ВМ в виде вложенного map.
+
+Файл ```variables.tf```:  
+```HCL
+###vm_resources var
+
+variable "vms_resources" {
+  description = "Resources for all vms"
+  type        = map(map(number))
+  default     = {
+    vm_web_resources = {
+      cores         = 2
+      memory        = 1
+      core_fraction = 5
+    }
+    vm_db_resources = {
+      cores         = 2
+      memory        = 2
+      core_fraction = 20
+    }
+  }
+}
+```
+
+Файл ```main.tf``` для первой вм:  
+```HCL
+resource "yandex_compute_instance" "platform" {
+  name        = local.vm_web_instance_name
+  platform_id = var.vm_web_platform_id
+  resources {
+    cores         = var.vms_resources.vm_web_resources.cores
+    memory        = var.vms_resources.vm_web_resources.memory
+    core_fraction = var.vms_resources.vm_web_resources.core_fraction
+  }
+```
+
+Файл ```main.tf``` для второй вм:  
+```HCL
+resource "yandex_compute_instance" "platform_2" {
+  name        = local.vm_db_instance_name
+  platform_id = var.vm_db_platform_id
+  resources {
+    cores         = var.vms_resources.vm_db_resources.cores
+    memory        = var.vms_resources.vm_db_resources.memory
+    core_fraction = var.vms_resources.vm_db_resources.core_fraction
+  }
+```
+   
+2. Создадим отдельную map переменную для блока metadata.
+
+Файл ```variables.tf```:  
+```HCL
+variable "metadata" {
+  description = "metadata for all vms"
+  type        = map(string)
+  default     = {
+    serial-port-enable = "1"
+    ssh-keys          = "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILfwOF+GHGNM6NMkIPPTr20g3zTaNhrIiNhik4u+WQE7 baryshnikov@debian"
+  }
+}
+``` 
+
+В файле ```main.tf``` для первой вм используем переменную:  
+```HCL
+resource "yandex_compute_instance" "platform" {
+  name        = local.vm_web_instance_name
+  platform_id = var.vm_web_platform_id
+  metadata = var.metadata
+``` 
+
+В файле ```main.tf``` для второй вм используем переменную:  
+```HCL
+resource "yandex_compute_instance" "platform_2" {
+  name        = local.vm_db_instance_name
+  platform_id = var.vm_db_platform_id
+  metadata = var.metadata
+```
+  
+3. Закоментируем все, более не используемые переменные проекта.  
+4. Проверим terraform plan.  
+
+Скриншот 10 - Выполнение команды ```terraform plan```.
+![Скриншот-10](/TER-35/ter/17.2-ter-02/img/17.2.6_Выполнение_команды_terraform_plan.png)
 
 ---
