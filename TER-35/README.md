@@ -3,4 +3,6 @@
 
 ## Модуль 17. "Облачная инфраструктура. Terraform"
 
-17.1. [Введение в Terraform.](https://github.com/BaryshnikovNV/netology-devops/blob/ter-01/TER-35/ter/17.1-ter-01/ter-01.md)
+17.1. [Введение в Terraform](https://github.com/BaryshnikovNV/netology-devops/blob/ter-01/TER-35/ter/17.1-ter-01/ter-01.md)
+
+17.2. [Основы Terraform. Yandex Cloud](https://github.com/BaryshnikovNV/netology-devops/blob/ter-02/TER-35/ter/17.2-ter-02/ter-02.md)
