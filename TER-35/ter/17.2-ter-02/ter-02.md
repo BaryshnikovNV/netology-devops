@@ -51,7 +51,7 @@ provider "yandex" {
 Скриншот 1 - Ошибка при выполнении ```terraform apply```.
 ![Скриншот-1](/TER-35/ter/17.2-ter-02/img/17.2.1.5.1_Ошибка_при_выполнении_terraform_apply.png)
 
-При просмотре блока resource **"yandex_compute_instance" "platform"** начинающегося со сторки 15, было выявлено следующие ошибки:
+При просмотре блока resource **"yandex_compute_instance" "platform"** начинающегося со сторки 15, были выявлены следующие ошибки:
 - в строке 17, где задается платформа, есть ошибка в названии платформы, а также в ее версии. Платформа должна называться *standard*, a не *standart* (https://docs.comcloud.xyz/providers/yandex-cloud/yandex/latest/docs/resources/compute_instance) и версией она может быть не больше v3 (https://cloud.yandex.ru/docs/compute/concepts/vm-platforms);
 - в строке 19 указано 1 ядро, хотя минимально может быть только 2 ядра (https://cloud.yandex.ru/docs/compute/concepts/performance-levels).
 
@@ -68,7 +68,7 @@ resource "yandex_compute_instance" "platform" {
   }
 ```
 
-После исправления вышеуказанных ошибок ВМ успешно создается:  
+После исправления вышеуказанных ошибок ВМ успешно создается.  
 Скриншот 2 - Создание ВМ после исправления ошибок.
 ![Скриншот-2](/TER-35/ter/17.2-ter-02/img/17.2.1.5.2_Создание_ВМ_после_исправления_ошибок.png)
 
@@ -83,9 +83,88 @@ resource "yandex_compute_instance" "platform" {
 
 Прерываемые виртуальные машины — это виртуальные машины, которые могут быть принудительно остановлены в любой момент. Это может произойти в двух случаях:  
 - Если с момента запуска виртуальной машины прошло 24 часа.  
-- Если возникнет нехватка ресурсов для запуска обычной виртуальной машины в той же зоне доступности. Вероятность такого события низкая, но может меняться изо дня в день.  
+- Если возникнет нехватка ресурсов для запуска обычной виртуальной машины в той же зоне доступности. Вероятность такого события низкая, но может меняться изо дня в день.
+
 Прерываемые виртуальные машины доступны по более низкой цене в сравнении с обычными, однако не обеспечивают отказоустойчивости.
 
 Параметр ```core_fraction``` указывает базовую производительность ядра в процентах. Данный параметр позволяет сэкономить на ВМ.
+
+---
+
+## Задание 2.
+<details>
+	<summary></summary>
+      <br>
+
+1. Изучите файлы проекта.
+2. Замените все хардкод-**значения** для ресурсов **yandex_compute_image** и **yandex_compute_instance** на **отдельные** переменные. К названиям переменных ВМ добавьте в начало префикс **vm_web_** .  Пример: **vm_web_name**.
+2. Объявите нужные переменные в файле variables.tf, обязательно указывайте тип переменной. Заполните их **default** прежними значениями из main.tf. 
+3. Проверьте terraform plan. Изменений быть не должно.
+
+</details>
+
+### Решение:
+
+1. Изучим файлы проекта.  
+2. Заменим все хардкод-**значения** для ресурсов **yandex_compute_image** и **yandex_compute_instance** на **отдельные** переменные. К названиям переменных ВМ добавим в начало префикс **vm_web_** :  
+```HCL
+data "yandex_compute_image" "ubuntu" {
+  family = var.vm_web_family
+}
+resource "yandex_compute_instance" "platform" {
+  name        = var.vm_web_name
+  platform_id = var.vm_web_platform_id
+  resources {
+    cores         = var.vm_web_cores
+    memory        = var.vm_web_memory
+    core_fraction = var.vm_web_core_fraction
+  }
+```  
+3. Объявим нужные переменные в файле variables.tf, с указанием типа переменной. Заполним их **default** прежними значениями из main.tf:  
+```HCL
+###yandex_compute_image vars
+
+variable "vm_web_family" {
+  type        = string
+  default     = "ubuntu-2004-lts"
+  description = "ubuntu image"
+}
+
+###yandex_compute_instance vars
+
+variable "vm_web_name" {
+  type        = string
+  default     = "netology-develop-platform-web"
+  description = "instance name"
+}
+
+variable "vm_web_platform_id" {
+  type        = string
+  default     = "standard-v1"
+  description = "platform ID"
+}
+
+variable "vm_web_cores" {
+  type        = string
+  default     = "2"
+  description = "vCPU numbers"
+}
+
+variable "vm_web_memory" {
+  type        = string
+  default     = "1"
+  description = "VM memory, Gb"
+}
+
+variable "vm_web_core_fraction" {
+  type        = string
+  default     = "5"
+  description = "core fraction"
+}
+```
+
+4. Проверим terraform plan. Изменений нет.  
+Скриншот 5 - Выпонение terraform plan.
+![Скриншот-5](/TER-35/ter/17.2-ter-02/img/17.2.2_Выпонение_terraform_plan.png)
 
 ---
