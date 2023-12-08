@@ -276,3 +276,37 @@ resource "yandex_compute_instance" "platform_2" {
 ![Скриншот-7](/TER-35/ter/17.2-ter-02/img/17.2.3.2_ЛК_Yandex_Cloud_с_созданной_второй_ВМ.png)
 
 ---
+
+## Задание 4.
+<details>
+	<summary></summary>
+      <br>
+
+1. Объявите в файле outputs.tf **один** output типа **map**, содержащий { instance_name = external_ip } для каждой из ВМ.
+2. Примените изменения.
+
+В качестве решения приложите вывод значений ip-адресов команды ```terraform output```.
+
+</details>
+
+### Решение:
+
+1. Объявим в файле outputs.tf **один** output типа **map**, содержащий { instance_name = external_ip } для каждой из ВМ.  
+
+```HCL
+output "VMs" {
+  value = {
+    instance_web = yandex_compute_instance.platform.name
+    external_ip_web = yandex_compute_instance.platform.network_interface.0.nat_ip_address
+    instance_db = yandex_compute_instance.platform_2.name
+    external_ip_db = yandex_compute_instance.platform_2.network_interface.0.nat_ip_address
+  }
+}
+```
+
+2. Применим изменения и выведим значения ip-адресов с помощью команды ```terraform output```.
+
+Скриншот 8 - Вывод значений ip-адресов с помощью команд ```terraform output```.
+![Скриншот-8](/TER-35/ter/17.2-ter-02/img/17.2.4_Вывод_значений_ip-адресов_с_помощью_команд_terraform_output.png)
+
+---
