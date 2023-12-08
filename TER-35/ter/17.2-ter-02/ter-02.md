@@ -482,3 +482,39 @@ resource "yandex_compute_instance" "platform_2" {
 ![Скриншот-10](/TER-35/ter/17.2-ter-02/img/17.2.6_Выполнение_команды_terraform_plan.png)
 
 ---
+
+## Задание 7*.
+<details>
+	<summary></summary>
+      <br>
+
+Изучите содержимое файла console.tf. Откройте terraform console, выполните следующие задания: 
+
+1. Напишите, какой командой можно отобразить **второй** элемент списка test_list.
+2. Найдите длину списка test_list с помощью функции length(<имя переменной>).
+3. Напишите, какой командой можно отобразить значение ключа admin из map test_map.
+4. Напишите interpolation-выражение, результатом которого будет: "John is admin for production server based on OS ubuntu-20-04 with X vcpu, Y ram and Z virtual disks", используйте данные из переменных test_list, test_map, servers и функцию length() для подстановки значений.
+
+**Примечание**: если не догадаетесь как вычленить слово "admin", погуглите: "terraform get keys of map"
+
+В качестве решения предоставьте необходимые команды и их вывод.
+
+------
+
+</details>
+
+### Решение:
+
+1. **Второй** элемент списка test_list можно отобразить командой ```local.test_list[1]```.  
+2. Длину списка test_list можно определить с помощью команды ```length(local.test_list)```.  
+3. Значение ключа admin из map test_map можно отобразить с помощью команды ```local.test_map["admin"]```.  
+4. Interpolation-выражение использующее данные из переменных test_list, test_map, servers и функцию length() для подстановки значений:
+
+```
+"${local.test_map.admin} is admin for ${local.test_list[2]} server based on OS ${local.servers.production.image} with ${local.servers.production.cpu} vcpu, ${local.servers.production.ram} rum and ${local.servers.production.disks[0]}, ${local.servers.production.disks[1]}, ${local.servers.production.disks[2]}, ${local.servers.production.disks[3]} virtual disks"
+```
+
+Скриншот 11 - Команды для отображения значений и их вывод.
+![Скриншот-11](/TER-35/ter/17.2-ter-02/img/17.2.7_Команды_для_отображения_значений_и_их_вывод.png)
+
+---
