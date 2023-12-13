@@ -19,7 +19,7 @@ variable "vm_db_platform_id" {
   default     = "standard-v1"
   description = "platform ID"
 }
-
+/*
 variable "vm_db_cores" {
   type        = string
   default     = "2"
@@ -37,3 +37,4 @@ variable "vm_db_core_fraction" {
   default     = "20"
   description = "core fraction"
 }
+*/
