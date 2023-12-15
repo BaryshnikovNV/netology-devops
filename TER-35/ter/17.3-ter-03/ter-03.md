@@ -118,3 +118,122 @@ metadata = {
 ![Скриншот-2](/TER-35/ter/17.3-ter-03/img/17.3.2_Выполнение_кода_проекта.png)
 
 ---
+
+## Задание 3.
+<details>
+	<summary></summary>
+      <br>
+
+1. Создайте 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле **disk_vm.tf** .
+2. Создайте в том же файле **одиночную**(использовать count или for_each запрещено из-за задания №4) ВМ c именем "storage"  . Используйте блок **dynamic secondary_disk{..}** и мета-аргумент for_each для подключения созданных вами дополнительных дисков.
+
+</details>
+
+### Решение:
+
+1. Создадим 3 одинаковых виртуальных диска размером 1 Гб с помощью ресурса yandex_compute_disk и мета-аргумента count в файле **disk_vm.tf**.
+
+```HCL
+variable "storage_disk" {
+  type = list(object({
+    for_storage = object({
+      name       = string
+      type       = string
+      size       = number
+      count      = number
+    })
+  }))
+
+  default = [ {
+    for_storage = {
+      name =  "disk"
+      type =  "network-hdd"
+      size =  1
+      count = 3
+    }
+  } ]
+}
+
+resource "yandex_compute_disk" "disks" {
+    name  = "${var.storage_disk[0].for_storage.name}-${count.index+1}"
+    type  = var.storage_disk[0].for_storage.type
+    size  = var.storage_disk[0].for_storage.size
+    count = var.storage_disk[0].for_storage.count
+}
+``` 
+
+2. Создадим в том же файле одиночную ВМ c именем "storage". Используем блок dynamic secondary_disk{..} и мета-аргумент for_each для подключения созданных дополнительных дисков.
+
+```HCL
+variable "yandex_compute_instance_storage" {
+  type = object({
+    storage_resources = object({
+      cores         = number
+      memory        = number
+      core_fraction = number
+      name          = string
+      zone          = string
+    })
+  })
+
+  default = {
+    storage_resources = {
+      cores         = 2
+      memory        = 2
+      core_fraction = 5
+      name          = "storage"
+      zone          = "ru-central1-a"
+    }
+  }
+}
+
+variable "boot_disk_storage" {
+  type = object({
+    size = number
+    type = string
+  })
+  default = {
+    size = 5
+    type = "network-hdd"
+  }
+}
+
+
+resource "yandex_compute_instance" "storage" {
+  name = var.yandex_compute_instance_storage.storage_resources.name
+  zone = var.yandex_compute_instance_storage.storage_resources.zone
+
+  resources {
+    cores  = var.yandex_compute_instance_storage.storage_resources.cores
+    memory = var.yandex_compute_instance_storage.storage_resources.memory
+    core_fraction = var.yandex_compute_instance_storage.storage_resources.core_fraction
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+      type     = var.boot_disk_storage.type
+      size     = var.boot_disk_storage.size
+    }
+  }
+      metadata = {
+        serial-port-enable = "1"
+        ssh-keys           = "ubuntu:${local.ssh-keys}"
+    }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+    security_group_ids = [
+      yandex_vpc_security_group.example.id
+    ]
+  }
+  dynamic "secondary_disk" {
+    for_each = yandex_compute_disk.disks.*.id
+    content {
+      disk_id = secondary_disk.value
+  }
+  }
+}
+```
+
+---
