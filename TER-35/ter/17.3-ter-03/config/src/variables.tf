@@ -32,16 +32,6 @@ variable "vpc_name" {
 }
 
 
-/*
-###ssh vars
-
-variable "vms_ssh_root_key" {
-  type        = string
-  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIZyC+NWgo5azELYdgWKti/+oPqHVlYl2wGwe6NIDqT1 baryshnikov@debian"
-  description = "ssh-keygen -t ed25519"
-}*/
-
-
 ###yandex_compute_image vars for web
 
 variable "vm_web_family" {

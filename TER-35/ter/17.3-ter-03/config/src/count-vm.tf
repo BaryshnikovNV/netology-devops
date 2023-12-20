@@ -26,10 +26,4 @@ resource "yandex_compute_instance" "web" {
     nat       = true
     security_group_ids = [yandex_vpc_security_group.example.id]
   }
-  /*
-  metadata = {
-    serial-port-enable = 1
-    ssh-keys           = "ubuntu:${var.vms_ssh_root_key}"
-  }
-*/
 }
