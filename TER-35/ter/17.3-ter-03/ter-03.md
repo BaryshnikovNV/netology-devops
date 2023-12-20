@@ -351,3 +351,80 @@ ${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]}
 ![Скриншот-4](/TER-35/ter/17.3-ter-03/img/17.3.5_Вывод_output.png)
 
 ---
+
+## Задание 6*.
+<details>
+	<summary></summary>
+      <br>
+
+1. Используя null_resource и local-exec, примените ansible-playbook к ВМ из ansible inventory-файла.
+Готовый код возьмите из демонстрации к лекции [**demonstration2**](https://github.com/netology-code/ter-homeworks/tree/main/demonstration2).
+3. Модифицируйте файл-шаблон hosts.tftpl. Необходимо отредактировать переменную ```ansible_host="<внешний IP-address или внутренний IP-address если у ВМ отсутвует внешний адрес>```.
+
+Для проверки работы уберите у ВМ внешние адреса(nat=false). Этот вариант используется при работе через bastion-сервер.
+Для зачёта предоставьте код вместе с основной частью задания.
+
+</details>
+
+### Решение:
+
+1. Используя null_resource и local-exec, применим ansible-playbook к ВМ из ansible inventory-файла. Готовый код возьмем из демонстрации к лекции demonstration2.
+
+```HCL
+resource "null_resource" "web_hosts_provision" {
+#Ждем создания инстанса
+depends_on = [yandex_compute_instance.storage]
+
+#Добавление ПРИВАТНОГО ssh ключа в ssh-agent
+  provisioner "local-exec" {
+    command = "cat /home/baryshnikov/.ssh/id_ed25519 | ssh-add -"
+  }
+
+#Костыль!!! Даем ВМ 60 сек на первый запуск. Лучше выполнить это через wait_for port 22 на стороне ansible
+# В случае использования cloud-init может потребоваться еще больше времени
+ provisioner "local-exec" {
+    command = "sleep 60"
+  }
+
+#Запуск ansible-playbook
+  provisioner "local-exec" {                  
+    command  = "export ANSIBLE_HOST_KEY_CHECKING=False; ansible-playbook -i ${abspath(path.module)}/hosts.cfg ${abspath(path.module)}/test.yml"
+    on_failure = continue #Продолжить выполнение terraform pipeline в случае ошибок
+    environment = { ANSIBLE_HOST_KEY_CHECKING = "False" }
+    #срабатывание триггера при изменении переменных
+  }
+    triggers = {  
+      always_run         = "${timestamp()}" #всегда т.к. дата и время постоянно изменяются
+      playbook_src_hash  = file("${abspath(path.module)}/test.yml") # при изменении содержимого playbook файла
+      ssh_public_key     = local.ssh-keys # при изменении переменной
+    }
+
+}
+```
+
+2. Модифицируем файл-шаблон hosts.tftpl:
+
+```HCL
+[webservers]
+
+%{~ for i in webservers ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]==null ? i["network_interface"][0]["ip_address"] : i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+
+
+[databases]
+
+%{~ for i in databases ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]==null ? i["network_interface"][0]["ip_address"] : i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+
+
+[storage]
+
+%{~ for i in storage ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]==null ? i["network_interface"][0]["ip_address"] : i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+```
