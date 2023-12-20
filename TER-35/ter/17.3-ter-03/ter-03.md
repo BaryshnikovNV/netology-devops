@@ -237,3 +237,85 @@ resource "yandex_compute_instance" "storage" {
 ```
 
 ---
+
+## Задание 4.
+<details>
+	<summary></summary>
+      <br>
+
+1. В файле ansible.tf создайте inventory-файл для ansible.
+Используйте функцию tepmplatefile и файл-шаблон для создания ansible inventory-файла из лекции.
+Готовый код возьмите из демонстрации к лекции [**demonstration2**](https://github.com/netology-code/ter-homeworks/tree/main/03/demonstration2).
+Передайте в него в качестве переменных группы виртуальных машин из задания 2.1, 2.2 и 3.2, т. е. 5 ВМ.
+2. Инвентарь должен содержать 3 группы и быть динамическим, т. е. обработать как группу из 2-х ВМ, так и 999 ВМ.
+3. Добавьте в инвентарь переменную  [**fqdn**](https://cloud.yandex.ru/docs/compute/concepts/network#hostname).
+``` 
+[webservers]
+web-1 ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>
+web-2 ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>
+
+[databases]
+main ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>
+replica ansible_host<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>
+
+[storage]
+storage ansible_host=<внешний ip-адрес> fqdn=<полное доменное имя виртуальной машины>
+```
+Пример fqdn: ```web1.ru-central1.internal```(в случае указания имени ВМ); ```fhm8k1oojmm5lie8i22a.auto.internal```(в случае автоматической генерации имени ВМ зона изменяется). ужную вам переменную найдите в документации провайдера или terraform console.
+4. Выполните код. Приложите скриншот получившегося файла. 
+
+Для общего зачёта создайте в вашем GitHub-репозитории новую ветку terraform-03. Закоммитьте в эту ветку свой финальный код проекта, пришлите ссылку на коммит.   
+**Удалите все созданные ресурсы**.
+
+</details>
+
+### Решение:
+
+1. Создадим файл ansible.tf. Напишем код используя функцию tepmplatefile и файл-шаблон для создания ansible inventory-файла опираясь на пример из демонстрации к лекции.
+
+Файл ansible.tf:  
+```HCL
+resource "local_file" "hosts_cfg" {
+  content = templatefile("${path.module}/hosts.tftpl",
+  {webservers = yandex_compute_instance.web
+  databases = yandex_compute_instance.for_each
+  storage = [yandex_compute_instance.storage]})
+  filename = "${abspath(path.module)}/hosts.cfg"
+}
+```
+
+2. Создадим inventory-файл, содержащий 3 группы.
+
+Файл hosts.tftpl:  
+```HCL
+[webservers]
+
+%{~ for i in webservers ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+
+
+[databases]
+
+%{~ for i in databases ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+
+
+[storage]
+
+%{~ for i in storage ~}
+
+${i["name"]}   ansible_host=${i["network_interface"][0]["nat_ip_address"]}
+%{~ endfor ~}
+```
+
+3. Скриншот файла hosts.cfg
+
+Скриншот 3 - Скриншот файла hosts.cfg.
+![Скриншот-3](/TER-35/ter/17.3-ter-03/img/17.3.4_Скриншот_файла_hosts.cfg.png)
+```
+
+---
