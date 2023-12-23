@@ -127,3 +127,64 @@ sudo docker run --rm --volume "$(pwd):/terraform-docs" -u $(id -u) quay.io/terra
 ```
 
 ---
+
+## Задание 3.
+<details>
+	<summary></summary>
+      <br>
+
+1. Выведите список ресурсов в стейте.
+2. Полностью удалите из стейта модуль vpc.
+3. Полностью удалите из стейта модуль vm.
+4. Импортируйте всё обратно. Проверьте terraform plan. Изменений быть не должно.
+Приложите список выполненных команд и скриншоты процессы.
+
+</details>
+
+### Решение:
+
+1. Выведем список ресурсов в стейте.  
+```bash
+terraform state list
+```
+
+2. Полностью удалим из стейта модуль vpc.  
+```bash
+erraform state rm module.vpc_dev
+```
+
+3. Полностью удалим из стейта модуль vm.  
+```bash
+terraform state rm module.test-vm
+```
+
+Скриншот 3 - Удаление ресурсов state.
+![Скриншот-3](/TER-35/ter/17.4-ter-04/img/17.4.3.1_Удаление_ресурсов_state.png)
+
+4. Импортируем всё обратно.
+
+Модуль vpc (network):  
+```bash
+terraform import module.vpc_dev.yandex_vpc_network.vpc enpb8m637pv3qt7vp4rk
+```
+
+Скриншот 4 - Импорт module.vpc_dev.yandex_vpc_network.vpc.
+![Скриншот-4](/TER-35/ter/17.4-ter-04/img/17.4.3.2_Импорт_module.vpc_dev.yandex_vpc_network.vpc.png)
+
+Модуль vpc (subnet):  
+```bash
+terraform import module.vpc_dev.yandex_vpc_subnet.subnet e9bnvrthg73vjjqu44c6
+```
+
+Скриншот 5 - Импорт module.vpc_dev.yandex_vpc_subnet.
+![Скриншот-5](/TER-35/ter/17.4-ter-04/img/17.4.3.3_Импорт_module.vpc_dev.yandex_vpc_subnet.png)
+
+Модуль vm:  
+```bash
+terraform import module.test-vm.yandex_compute_instance.vm[0] fhm4am90sj85bt8lli1g
+```
+
+Скриншот 6 - Импорт module.test-vm.yandex_compute_instance.vm.
+![Скриншот-6](/TER-35/ter/17.4-ter-04/img/17.4.3.4_Импорт_module.test-vm.yandex_compute_instance.vm.png)
+
+---
