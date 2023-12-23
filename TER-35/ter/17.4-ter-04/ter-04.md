@@ -47,3 +47,83 @@ data "template_file" "cloudinit" {
 ![Скриншот-1](/TER-35/ter/17.4-ter-04/img/17.4.1_Подключение_к_консоли.png)
 
 ---
+
+## Задание 2.
+<details>
+	<summary></summary>
+      <br>
+
+1. Напишите локальный модуль vpc, который будет создавать 2 ресурса: **одну** сеть и **одну** подсеть в зоне, объявленной при вызове модуля, например: ```ru-central1-a```.
+2. Вы должны передать в модуль переменные с названием сети, zone и v4_cidr_blocks.
+3. Модуль должен возвращать в root module с помощью output информацию о yandex_vpc_subnet. Пришлите скриншот информации из terraform console о своем модуле. Пример: > module.vpc_dev  
+4. Замените ресурсы yandex_vpc_network и yandex_vpc_subnet созданным модулем. Не забудьте передать необходимые параметры сети из модуля vpc в модуль с виртуальной машиной.
+5. Откройте terraform console и предоставьте скриншот содержимого модуля. Пример: > module.vpc_dev.
+6. Сгенерируйте документацию к модулю с помощью terraform-docs.    
+ 
+Пример вызова
+
+```
+module "vpc_dev" {
+  source       = "./vpc"
+  env_name     = "develop"
+  zone = "ru-central1-a"
+  cidr = "10.0.1.0/24"
+}
+```
+
+</details>
+
+### Решение:
+
+1. Напишем локальный модуль vpc, который будет создавать 2 ресурса: **одну** сеть и **одну** подсеть в зоне, объявленной при вызове модуля.  
+2. Воспользуемся в модуле переменными с названием сети, zone и v4_cidr_blocks.
+
+```hcl
+variable "env_name" {
+  type        = string
+  description = "Имя облачной сети"
+}
+
+variable "zone" {
+  type        = string
+  description = "Зона доступности"
+}
+
+variable "v4_cidr_blocks" {
+  type        = string
+  description = "cidr блок"
+}
+```
+
+3. Скриншот информации из terraform console о модуле.
+
+Скриншот 2 - Вывод команды module.vpc_dev.
+![Скриншот-2](/TER-35/ter/17.4-ter-04/img/17.4.2_Вывод_команды_module.vpc_dev.png)
+
+4. Заменим ресурсы yandex_vpc_network и yandex_vpc_subnet созданным модулем.
+
+```hcl
+module "test-vm" {
+  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
+  env_name        = "develop"
+  network_id      = module.vpc_dev.network_id
+  subnet_zones    = ["ru-central1-a"]
+  subnet_ids      = [ module.vpc_dev.subnet_id ]
+  instance_name   = "web"
+  instance_count  = 1
+  image_family    = "ubuntu-2004-lts"
+  public_ip       = true
+  
+  metadata = {
+      user-data          = data.template_file.cloudinit.rendered #Для демонстрации №3
+      serial-port-enable = 1
+  }
+}
+```
+
+5. Сгенерируем документацию к модулю с помощью terraform-docs. Для этого воспользуемся следующей командой:  
+```bash
+sudo docker run --rm --volume "$(pwd):/terraform-docs" -u $(id -u) quay.io/terraform-docs/terraform-docs:0.16.0 markdown /terraform-docs > doc.md
+```
+
+---
