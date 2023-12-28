@@ -10,3 +10,5 @@
 17.3. [Управляющие конструкции в коде Terraform](https://github.com/BaryshnikovNV/netology-devops/blob/ter-03/TER-35/ter/17.3-ter-03/ter-03.md)
 
 17.4. [Продвинутые методы работы с Terraform](https://github.com/BaryshnikovNV/netology-devops/blob/ter-04/TER-35/ter/17.4-ter-04/ter-04.md)
+
+17.5. [Использование Terraform в команде](https://github.com/BaryshnikovNV/netology-devops/blob/ter-05/TER-35/ter/17.5-ter-05/ter-05.md)
