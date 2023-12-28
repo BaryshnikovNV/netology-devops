@@ -178,3 +178,82 @@ Check: CKV_TF_1: "Ensure Terraform module sources use a commit hash"
 - *"Ensure Terraform module sources use a commit hash"* - нужно убедиться, что используемый терраформ модуль использует хэш-коммит.
 
 ---
+
+## Задание 2.
+<details>
+	<summary></summary>
+      <br>
+
+1. Возьмите ваш GitHub-репозиторий с **выполненным ДЗ 4** в ветке 'terraform-04' и сделайте из него ветку 'terraform-05'.
+2. Повторите демонстрацию лекции: настройте YDB, S3 bucket, yandex service account, права доступа и мигрируйте state проекта в S3 с блокировками. Предоставьте скриншоты процесса в качестве ответа.
+3. Закоммитьте в ветку 'terraform-05' все изменения.
+4. Откройте в проекте terraform console, а в другом окне из этой же директории попробуйте запустить terraform apply.
+5. Пришлите ответ об ошибке доступа к state.
+6. Принудительно разблокируйте state. Пришлите команду и вывод.
+
+</details>
+
+### Решение:
+
+2.2.1. Создаем ресурс бакет.
+- Задаем уникальное среди всех бакетов Yandex Cloud имя ```tfstate-new```;
+- Задаем ограничение объема в 1Гб.
+
+2.2.2. Создаем сервисный аккаунт.
+- Задаем имя ```tfstate-2```;
+- Задаем роли в катологе ```storage.editor``` и ```ydb.editor```;
+- На странице аккаунта создаем и сохраняем статический ключ доступа (идентификатор ключа и секретный ключ).
+
+2.2.3. В меню ACL бакета выбираем пользователя ```tfstate-new``` и задаем права ```READ и WRITE```.
+
+2.2.4. Добавляем в main.tf блок:
+```hcl
+backend "s3" {
+    endpoint = "storage.yandexcloud.net"
+    bucket   = "tfstate-new"
+    region   = "ru-central1"
+    key      = "terraform.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+  }
+```
+
+С помощью команды ```terraform init -backend-config="access_key=..." -backend-config="secret_key=..."``` проводим инициализацию проекта.
+
+Скриншот 2 - Инициализация проект (миграция state проекта в s3).
+![Скриншот-2](/TER-35/ter/17.5-ter-05/img/17.5.2.1_Миграция_state_проекта_в_s3.png)
+
+Скриншот 3 - Сохраненный в бакете state.
+![Скриншот-3](/TER-35/ter/17.5-ter-05/img/17.5.2.2_Сохраненный_в_бакете_state.png)
+
+2.2.5. Создаем YDB.
+- Указываем имя БД tfstate-lock и задаем ограничение объема в 1Гб.
+- Создаем таблицу (Имя ```tfstate-develop```, тип таблицы ```Документная таблица```, колона ```LockID```, тип ```string```).
+
+2.2.6. Добавляем в main.tf блока backend "s3" следующие строки:
+```hcl
+dynamodb_endpoint = "https://docapi.serverless.yandexcloud.net/ru-central1/b1gc5lv1oap0ommnp9nu/etnfskduul53l4opdt72"
+dynamodb_table    = "tfstate-develop"
+```
+
+Выпонляем инициализацию проекта```terraform init -mirage-state -backend-config="access_key=..." -backend-config="secret_key=..."```.
+
+Скриншот 4 - Инициализация проекта.
+![Скриншот-4](/TER-35/ter/17.5-ter-05/img/17.5.2.3_Инициализация_проекта.png)
+
+2.3. Делаем комминт в ветку ['terraform-05'](https://github.com/BaryshnikovNV/netology-devops/commit/9cd2366ce59fa3985622d1518bbd4afe7f013f09) все изменения.
+
+2.3.4. Открываем в проекте terraform console, а в другом окне из этой же директории запускаем terraform apply.
+
+2.5.
+
+Скриншот 5 - Ошибка доступа к state.
+![Скриншот-5](/TER-35/ter/17.5-ter-05/img/17.5.2.5_Ошибка_доступа_к_state.png)
+
+2.6. Принудительно разблокируем state с помощью команды ```terraform force-unlock cf9ce32d-a24b-27e4-4fe8-1a9d73e0a320```
+
+Скриншот 6 - Принудительная разблокировка state.
+![Скриншот-6](/TER-35/ter/17.5-ter-05/img/17.5.2.6_Принудительная_разблокировка_state.png)
+
+---
