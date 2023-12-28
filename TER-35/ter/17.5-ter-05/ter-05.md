@@ -281,7 +281,7 @@ dynamodb_table    = "tfstate-develop"
 
 ---
 
-## Задание 4*.
+## Задание 4.
 <details>
 	<summary></summary>
       <br>
