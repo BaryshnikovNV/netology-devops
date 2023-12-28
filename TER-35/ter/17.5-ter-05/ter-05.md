@@ -257,3 +257,26 @@ dynamodb_table    = "tfstate-develop"
 ![Скриншот-6](/TER-35/ter/17.5-ter-05/img/17.5.2.6_Принудительная_разблокировка_state.png)
 
 ---
+
+## Задание 3.
+<details>
+	<summary></summary>
+      <br>
+
+1. Сделайте в GitHub из ветки 'terraform-05' новую ветку 'terraform-hotfix'.
+2. Проверье код с помощью tflint и checkov, исправьте все предупреждения и ошибки в 'terraform-hotfix', сделайте коммит.
+3. Откройте новый pull request 'terraform-hotfix' --> 'terraform-05'. 
+4. Вставьте в комментарий PR результат анализа tflint и checkov, план изменений инфраструктуры из вывода команды terraform plan.
+5. Пришлите ссылку на PR для ревью. Вливать код в 'terraform-05' не нужно.
+
+</details>
+
+### Решение:
+
+3.1. Сделаем в GitHub из ветки 'terraform-05' новую ветку 'terraform-hotfix'.  
+3.2. Проверим код с помощью tflint и checkov, исправим все предупреждения и ошибки в 'terraform-hotfix'. [Сделаем коммит](https://github.com/BaryshnikovNV/netology-devops/commit/2f6fc561726ce301c9080abf37ecc3e29ff50838).  
+3.3. Открываем новый pull request 'terraform-hotfix' --> 'terraform-05'.  
+3.4. Вставляем в комментарий PR результат анализа tflint и checkov, план изменений инфраструктуры из вывода команды terraform plan.
+3.5. [Ссылка на PR для ревью](https://github.com/BaryshnikovNV/netology-devops/pull/1).
+
+---
