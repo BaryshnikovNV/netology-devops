@@ -113,3 +113,80 @@ ansible-playbook -i inventory/prod.yml site.yml --ask-vault-password
 12. Ссылка на открытый репозиторий с измененным [playbook](./config/mandatory_part/playbook).
 
 ---
+
+## Необязательная часть.
+<details>
+	<summary></summary>
+      <br>
+
+1. При помощи `ansible-vault` расшифруйте все зашифрованные файлы с переменными.
+2. Зашифруйте отдельное значение `PaSSw0rd` для переменной `some_fact` паролем `netology`. Добавьте полученное значение в `group_vars/all/exmp.yml`.
+3. Запустите `playbook`, убедитесь, что для нужных хостов применился новый `fact`.
+4. Добавьте новую группу хостов `fedora`, самостоятельно придумайте для неё переменную. В качестве образа можно использовать [этот вариант](https://hub.docker.com/r/pycontribs/fedora).
+5. Напишите скрипт на bash: автоматизируйте поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
+6. Все изменения должны быть зафиксированы и отправлены в ваш личный репозиторий.
+
+</details>
+
+### Решение:
+
+1. Расшифруем все зашифрованные файлы с переменными с помощью команды `ansible-vault decrypt`:
+
+```bash
+ansible-vault decrypt group_vars/deb/examp.yml group_vars/el/examp.yml
+```
+
+Скриншот 10 - Расшифрование фактов в `group_vars/deb` и `group_vars/el` с паролем `netology`.
+![Скриншот-10](/KONF-35/ansible/18.1-ansible-01-base/img/18.1.12_Расшифрование_фактов_в_deb_и_el.png)
+
+2. Зашифруем отдельное значение `PaSSw0rd` для переменной `some_fact` паролем `netology`.
+
+```bash
+ansible-vault encrypt_string
+```
+
+Скриншот 11 - Шифрование отдельного значения `PaSSw0rd` для переменной `some_fact` паролем `netology`.
+![Скриншот-11](/KONF-35/ansible/18.1-ansible-01-base/img/18.1.13_Шифрование_отдельного_значения_PaSSw0rd_для_переменной_some_fact.png)
+
+Добавим полученное значение в `group_vars/all/exmp.yml`:
+
+Скриншот 12 - Добавление полученного значения в `group_vars/all/exmp.yml`.
+![Скриншот-12](/KONF-35/ansible/18.1-ansible-01-base/img/18.1.14_Добавление_полученного_значения_в_exmp.yml.png)
+
+3. Запустим playbook, убедимся, что для нужных хостов применился новый fact.
+
+Скриншот 13 - Запуск playbook на окружении prod.yml после добавления нового fact.
+![Скриншот-13](/KONF-35/ansible/18.1-ansible-01-base/img/18.1.15_Запуск_playbook_на_окружении_prod.yml_после_добавления_нового_fact.png)
+
+4. Добавим новую группу хостов `fedora`, придумаем для неё переменную. В качестве образа используем [этот вариант](https://hub.docker.com/r/pycontribs/fedora).
+
+Скриншот 14 - Запуск playbook на окружении prod.yml после добавления новой группы хостов и новой переменной.
+![Скриншот-14](/KONF-35/ansible/18.1-ansible-01-base/img/18.1.16_Запуск_playbook_на_окружении_prod.yml_после_добавления_новой_группы_хостов_и_новой_переменной.png)
+
+5. Напишим скрипт на bash: автоматизируем поднятие необходимых контейнеров, запуск ansible-playbook и остановку контейнеров.
+
+Файл script.sh
+```bash
+#!/bin/bash
+
+host_c=centos7
+host_u=ubuntu
+host_f=fedora
+
+image_c=pycontribs/centos:7
+image_u=pycontribs/ubuntu:latest
+image_f=pycontribs/fedora:latest
+
+docker run -d --name $host_c $image_c sleep infinity
+docker run -d --name $host_u $image_u sleep infinity
+docker run -d --name $host_f $image_f sleep infinity
+
+ansible-playbook -i inventory/prod.yml site.yml --ask-vault-password
+
+docker stop $host_c $host_u $host_f
+docker rm $host_c $host_u $host_f
+```
+
+6. Ссылка на открытый репозиторий с измененным [playbook](./config/optional_part/playbook).
+
+---
