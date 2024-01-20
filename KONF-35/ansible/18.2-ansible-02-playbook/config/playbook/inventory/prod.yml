@@ -1,0 +1,14 @@
+---
+clickhouse:
+  hosts:
+    clickhouse-01:
+      ansible_name: "root"
+      ansible_host: 158.160.113.138
+      ansible_private_key_file: /home/baryshnikov/.ssh/id_rsa
+
+vector:
+  hosts:
+    vector-01:
+      ansible_name: "root"
+      ansible_host: 158.160.113.138
+      ansible_private_key_file: /home/baryshnikov/.ssh/id_rsa
