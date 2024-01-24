@@ -1,0 +1,157 @@
+---
+- name: Install Clickhouse
+  hosts: clickhouse
+  handlers:
+    - name: Start clickhouse service
+      become: true
+      ansible.builtin.service:
+        name: clickhouse-server
+        state: restarted
+  tasks:
+    - name: Create Rules
+      block:
+        - name: Get clickhouse distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/{{ item }}-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "./{{ item }}-{{ clickhouse_version }}.rpm"
+            mode: "0755"
+          with_items: "{{ clickhouse_packages }}"
+      rescue:
+        - name: Get clickhouse distrib
+          ansible.builtin.get_url:
+            url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+            dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+            mode: "0755"
+    - name: Install clickhouse packages
+      become: true
+      ansible.builtin.yum:
+        name:
+          - clickhouse-common-static-{{ clickhouse_version }}.rpm
+          - clickhouse-client-{{ clickhouse_version }}.rpm
+          - clickhouse-server-{{ clickhouse_version }}.rpm
+      notify: Start clickhouse service
+    # Принудительное использование handlers для сарта сервиса clickhouse-server, иначе не получится создать БД
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+    # Задержка после рестарта сервера, что бы успел запустится
+    - name: Delay 20 sec
+      ansible.builtin.pause:
+        seconds: 20
+    - name: Create database
+      ansible.builtin.command: "clickhouse-client -q 'create database logs;'"
+      register: create_db
+      failed_when: create_db.rc != 0 and create_db.rc != 82
+      changed_when: create_db.rc == 0
+
+- name: Install Vector
+  hosts: vector
+  # handlers для старта/рестарта сервиса Vector
+  handlers:
+    - name: Start Vector service
+      become: true
+      ansible.builtin.service:
+        name: vector
+        state: restarted
+
+  tasks:
+  # Скачивание rpm пакета vector для установки
+    - name: Get Vector distrib
+      ansible.builtin.get_url:
+        url: "https://packages.timber.io/vector/0.X/vector-{{ vector_version }}-1.{{ vector_architecture }}.rpm"
+        dest: "./vector-{{ vector_version }}-1.{{ vector_architecture }}.rpm"
+        mode: "0755"
+  # Установка rpm пакета vector
+    - name: Install Vector packages
+      become: true
+      ansible.builtin.yum:
+        name: vector-{{ vector_version }}-1.{{ vector_architecture }}.rpm
+      notify: Start Vector service
+  # Создание файла конфигурации для vector. Сама конфигурация не претендует на рабочую, но пример взят с офф.документации vector
+    - name: Vector | Template config
+      become: true
+      ansible.builtin.template:
+        src: vector.toml.yml
+        dest: /etc/vector/vector.yaml
+        mode: "0644"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+        validate: vector validate --no-environment --config-yaml %s
+    - name: Vector | Create systed unit
+      become: true
+      ansible.builtin.template:
+        src: vector.service.j2
+        dest: /etc/systemd/system/vector.service
+        mode: "0644"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
+    - name: Vector | Start Service
+      become: true
+      ansible.builtin.systemd:
+        name: vector
+        state: started
+        daemon_reload: true
+
+- name: Install Nginx
+  hosts: lighthouse
+  handlers:
+    - name: Start-nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      become: true
+      become_method: sudo
+    - name: Restart-nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      become: true
+      become_method: sudo
+  tasks:
+    - name: Nginx | Install epel-release
+      become: true
+      ansible.builtin.yum:
+        name: epel-release
+        state: present
+    - name: Nginx | Install Nginx
+      become: true
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+      notify: Start-nginx
+    - name: Nginx | Create general config
+      become: true
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        mode: '0644'
+      notify: Restart-nginx
+
+- name: Install Lighthouse
+  hosts: lighthouse
+  handlers:
+    - name: Restart-nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      become: true
+      become_method: sudo
+  pre_tasks:
+    - name: Lighthouse | Install dependencies
+      become: true
+      ansible.builtin.yum:
+        name: git
+        state: present
+  tasks:
+    - name: Lighthouse | Clone from git
+      become: true
+      ansible.builtin.git:
+        repo: "{{ lighthouse_vcs }}"
+        version: master
+        dest: "{{ lighthouse_location_dir }}"
+    - name: Lighthouse | Create lighthouse config
+      become: true
+      ansible.builtin.template:
+        src: templates/lighthouse.conf.j2
+        dest: /etc/nginx/conf.d/default.conf
+        mode: "0644"
+      notify: Restart-nginx
