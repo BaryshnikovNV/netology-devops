@@ -5,3 +5,4 @@
 [Виртуализация и контейнеризация](https://github.com/BaryshnikovNV/netology-devops/blob/master/VIRTD-35/README.md)  
 [Облачная инфраструктура. Terraform](https://github.com/BaryshnikovNV/netology-devops/blob/TER-35/TER-35/README.md)  
 [Система управления конфигурациями](https://github.com/BaryshnikovNV/netology-devops/blob/KONF-35/KONF-35/README.md)  
+[Непрерывная разработка и интеграция](https://github.com/BaryshnikovNV/netology-devops/blob/CICD-DEV-35/CICD-DEV-35/README.md)  
