@@ -264,3 +264,60 @@ INFO: ------------------------------------------------------------------------
 5. Заберем директорию mvn с pom.
 
 ---
+
+### Основная часть
+<details>
+	<summary></summary>
+      <br>
+
+1. Поменяйте в `pom.xml` блок с зависимостями под ваш артефакт из первого пункта задания для Nexus (java с версией 8_282).
+2. Запустите команду `mvn package` в директории с `pom.xml`, ожидайте успешного окончания.
+3. Проверьте директорию `~/.m2/repository/`, найдите ваш артефакт.
+4. В ответе пришлите исправленный файл `pom.xml`.
+
+</details>
+
+#### Решение:
+
+1. Поменяем в `pom.xml` блок с зависимостями под артефакт из первого пункта задания для Nexus (java с версией 8_282).
+
+```XML
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.netology.app</groupId>
+  <artifactId>simple-app</artifactId>
+  <version>1.0-SNAPSHOT</version>
+   <repositories>
+    <repository>
+      <id>my-repo</id>
+      <name>maven-public</name>
+      <url>http://51.250.88.48:8081/repository/maven-public/</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>netology</groupId>
+      <artifactId>java</artifactId>
+      <version>8_282</version>
+      <classifier>distrib</classifier>
+      <type>tar.gz</type>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+2. Запустим команду `mvn package` в директории с `pom.xml` и дождемся ее успешного окончания.
+
+Скриншот 11 - Выполнение команды mvn package.
+![Скриншот-11](./img/19.3.11_Выполнение_команды_mvn_package.png)
+
+3. Проверим директорию `~/.m2/repository/`, найдим артефакт.
+
+Скриншот 12 - Проверка директории на наличие артефакта.
+![Скриншот-12](./img/19.3.12_Проверка_наличия_артефакта.png)
+
+4. Исправленный файл [`pom.xml`](./config/mvn/pom.xml).
+
+---
