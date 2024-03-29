@@ -6,3 +6,4 @@
 [Облачная инфраструктура. Terraform](https://github.com/BaryshnikovNV/netology-devops/blob/TER-35/TER-35/README.md)  
 [Система управления конфигурациями](https://github.com/BaryshnikovNV/netology-devops/blob/KONF-35/KONF-35/README.md)  
 [Непрерывная разработка и интеграция](https://github.com/BaryshnikovNV/netology-devops/blob/CICD-DEV-35/CICD-DEV-35/README.md)  
+[Мониторинг и логи](https://github.com/BaryshnikovNV/netology-devops/blob/MON-DEV-35/MON-DEV-35/README.md)  
