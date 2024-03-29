@@ -140,3 +140,91 @@
  - Nagios - гибридная модель (pull модель используется по умолчанию)
 
 ---
+
+## Задание 7.
+<details>
+	<summary></summary>
+      <br>
+
+Склонируйте себе [репозиторий](https://github.com/influxdata/sandbox/tree/master) и запустите TICK-стэк, 
+используя технологии docker и docker-compose.
+
+В виде решения на это упражнение приведите скриншот веб-интерфейса ПО chronograf (`http://localhost:8888`). 
+
+P.S.: если при запуске некоторые контейнеры будут падать с ошибкой - проставьте им режим `Z`, например
+`./data:/var/lib:Z`
+
+</details>
+
+### Решение:
+
+Скриншот 1 - Веб-интерфейса ПО chronograf.
+![Скриншот-1](./img/20.1.7_Веб-интерфейса_ПО_chronograf.png)
+
+---
+
+## Задание 8.
+<details>
+	<summary></summary>
+      <br>
+
+Перейдите в веб-интерфейс Chronograf (http://localhost:8888) и откройте вкладку Data explorer.
+        
+ - Нажмите на кнопку Add a query
+ - Изучите вывод интерфейса и выберите БД telegraf.autogen
+ - В `measurments` выберите cpu->host->telegraf-getting-started, а в `fields` выберите usage_system. Внизу появится график утилизации cpu.
+ - Вверху вы можете увидеть запрос, аналогичный SQL-синтаксису. Поэкспериментируйте с запросом, попробуйте изменить группировку и интервал наблюдений.
+
+Для выполнения задания приведите скриншот с отображением метрик утилизации cpu из веб-интерфейса.
+
+</details>
+
+### Решение:
+
+Скриншот 2 - Отображение метрик утилизации cpu из веб-интерфейса.
+![Скриншот-2](./img/20.1.8_Отображение_метрик_утилизации_cpu_из_веб-интерфейса.png)
+
+---
+
+## Задание 9.
+<details>
+	<summary></summary>
+      <br>
+
+Изучите список [telegraf inputs](https://github.com/influxdata/telegraf/tree/master/plugins/inputs). 
+Добавьте в конфигурацию telegraf следующий плагин - [docker](https://github.com/influxdata/telegraf/tree/master/plugins/inputs/docker):
+```
+[[inputs.docker]]
+  endpoint = "unix:///var/run/docker.sock"
+```
+
+Дополнительно вам может потребоваться донастройка контейнера telegraf в `docker-compose.yml` дополнительного volume и 
+режима privileged:
+```
+  telegraf:
+    image: telegraf:1.4.0
+    privileged: true
+    volumes:
+      - ./etc/telegraf.conf:/etc/telegraf/telegraf.conf:Z
+      - /var/run/docker.sock:/var/run/docker.sock:Z
+    links:
+      - influxdb
+    ports:
+      - "8092:8092/udp"
+      - "8094:8094"
+      - "8125:8125/udp"
+```
+
+После настройке перезапустите telegraf, обновите веб интерфейс и приведите скриншотом список `measurments` в 
+веб-интерфейсе базы telegraf.autogen . Там должны появиться метрики, связанные с docker.
+
+Факультативно можете изучить какие метрики собирает telegraf после выполнения данного задания.
+
+</details>
+
+### Решение:
+
+Скриншот 3 - Отображение метрик утилизации cpu из веб-интерфейса связанных с docker.
+![Скриншот-3](./img/20.1.9_Отображение_метрик_утилизации_cpu_из_веб-интерфейса_связанных_с_docker.png)
+
+---
