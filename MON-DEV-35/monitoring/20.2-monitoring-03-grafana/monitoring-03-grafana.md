@@ -61,13 +61,13 @@
 
 - утилизация CPU для nodeexporter (в процентах, 100-idle)
 
-```PromQL
+```promql
 100 - (avg by (instance) (rate(node_cpu_seconds_total{job="nodeexporter",mode="idle"}[1m])) * 100)
 ```
 
 - CPULA 1/5/15
 
-```PromQL
+```promql
 avg by (instance)(rate(node_load1{}[1m]))
 avg by (instance)(rate(node_load5{}[1m]))
 avg by (instance)(rate(node_load15{}[1m]))
@@ -75,17 +75,41 @@ avg by (instance)(rate(node_load15{}[1m]))
 
 - количество свободной оперативной памяти
 
-```PromQL
+```promql
 node_memory_MemFree_bytes{instance="nodeexporter:9100",job="nodeexporter"}
 ```
 
-- количество места на файловой системе.
+- количество места на файловой системе
 
-```PromQL
+```promql
 node_filesystem_avail_bytes{mountpoint="/"}
 ```
 
 Скриншот 4 - Получившийся Dashboard.
 ![Скриншот-4](./img/20.1.2_Получившийся_Dashboard.png)
+
+---
+
+## Задание 3.
+<details>
+	<summary></summary>
+      <br>
+
+1. Создайте для каждой Dashboard подходящее правило alert — можно обратиться к первой лекции в блоке «Мониторинг».
+2. В качестве решения задания приведите скриншот вашей итоговой Dashboard.
+
+</details>
+
+### Решение:
+
+1. Создадим правила alert.
+
+Скриншот 5 - Создание правил alert.
+![Скриншот-5](./img/20.1.3.1_Создание_правил_alert.png)
+
+2. В качестве решения задания приведем скриншот итоговой Dashboard.
+
+Скриншот 6 - Итоговая Dashboard.
+![Скриншот-6](./img/20.1.3.2_Итоговая_Dashboard.png)
 
 ---
