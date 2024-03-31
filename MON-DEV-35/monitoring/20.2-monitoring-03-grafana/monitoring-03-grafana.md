@@ -32,3 +32,60 @@
 ![Скриншот-3](./img/20.1.1.4_Веб-интерфейс_grafana_со_списком_подключенных_Datasource.png)
 
 ---
+
+## Задание 2.
+<details>
+	<summary></summary>
+      <br>
+
+Изучите самостоятельно ресурсы:
+
+1. [PromQL tutorial for beginners and humans](https://valyala.medium.com/promql-tutorial-for-beginners-9ab455142085).
+2. [Understanding Machine CPU usage](https://www.robustperception.io/understanding-machine-cpu-usage).
+3. [Introduction to PromQL, the Prometheus query language](https://grafana.com/blog/2020/02/04/introduction-to-promql-the-prometheus-query-language/).
+
+Создайте Dashboard и в ней создайте Panels:
+
+- утилизация CPU для nodeexporter (в процентах, 100-idle);
+- CPULA 1/5/15;
+- количество свободной оперативной памяти;
+- количество места на файловой системе.
+
+Для решения этого задания приведите promql-запросы для выдачи этих метрик, а также скриншот получившейся Dashboard.
+
+</details>
+
+### Решение:
+
+Создадим Dashboard и в ней создадим Panels:
+
+- утилизация CPU для nodeexporter (в процентах, 100-idle)
+
+```PromQL
+100 - (avg by (instance) (rate(node_cpu_seconds_total{job="nodeexporter",mode="idle"}[1m])) * 100)
+```
+
+- CPULA 1/5/15
+
+```PromQL
+avg by (instance)(rate(node_load1{}[1m]))
+avg by (instance)(rate(node_load5{}[1m]))
+avg by (instance)(rate(node_load15{}[1m]))
+```
+
+- количество свободной оперативной памяти
+
+```PromQL
+node_memory_MemFree_bytes{instance="nodeexporter:9100",job="nodeexporter"}
+```
+
+- количество места на файловой системе.
+
+```PromQL
+node_filesystem_avail_bytes{mountpoint="/"}
+```
+
+Скриншот 4 - Получившийся Dashboard.
+![Скриншот-4](./img/20.1.2_Получившийся_Dashboard.png)
+
+---
