@@ -123,3 +123,60 @@ Restarting service kubelite.
 ```
 
 ---
+
+## Задание 2. Установка и настройка локального kubectl
+<details>
+	<summary></summary>
+      <br>
+
+1. Установить на локальную машину kubectl.
+2. Настроить локально подключение к кластеру.
+3. Подключиться к дашборду с помощью port-forward.
+
+</details>
+
+### Решение:
+
+1. Установим на локальную машину kubectl.
+```bash
+baryshnikov@kuber:~$ curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 49.0M  100 49.0M    0     0  20.3M      0  0:00:02  0:00:02 --:--:-- 20.3M
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$ chmod +x ./kubectl
+baryshnikov@kuber:~$ sudo mv ./kubectl /usr/local/bin/kubectl
+baryshnikov@kuber:~$ bash source <(kubectl completion bash)
+bash: source: No such file or directory
+baryshnikov@kuber:~$ source <(kubectl completion bash)
+baryshnikov@kuber:~$ echo "source <(kubectl completion bash)" >> ~/.bashrc
+```
+
+2. Настроим локально подключение к кластеру.
+
+Внесем параметры cluster, user и context на локальной машине:
+```bash
+baryshnikov@kuber:~$ microk8s config > ~/.kube/config
+baryshnikov@kuber:~$ kubectl config get-contexts
+CURRENT   NAME       CLUSTER            AUTHINFO   NAMESPACE
+*         microk8s   microk8s-cluster   admin
+```
+
+Скриншот 1 - Вывод команд kubectl get nodes.
+![Скриншот-1](./img/22.1.2.2_Вывод_комады_kubectl.png)
+
+3. Подключимся к дашборду с помощью port-forward.
+
+```bash
+baryshnikov@kuber:~$ kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address='0.0.0.0'
+Forwarding from 0.0.0.0:10443 -> 8443
+Handling connection for 10443
+```
+
+С помощью команды `microk8s kubectl create token default` извлечем токен для входа в dashboard.  
+Перейдем в панель управления по адресу https://62.84.120.199:10443.
+
+Скриншот 2 - Dashboard.
+![Скриншот-2](./img/22.1.2.3_Скриншот_dashboard.png)
+
+---
