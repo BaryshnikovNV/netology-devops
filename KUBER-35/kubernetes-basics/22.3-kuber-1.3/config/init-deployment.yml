@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-deployment-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: init-deployment
+  template:
+    metadata:
+      labels:
+        app: init-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.26
+      initContainers:
+      - name: init-busybox
+        image: busybox:1.36.1
+        command: ['sleep', '30']

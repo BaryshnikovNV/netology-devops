@@ -1,4 +1,5 @@
 # Домашнее задание к занятию "`Запуск приложений в K8S`" - `Барышников Никита`
+
 ## Задание 1. Создать Deployment и обеспечить доступ к репликам приложения из другого Pod
 <details>
 	<summary></summary>
@@ -251,5 +252,110 @@ multitool-pod                                 1/1     Running   0          17s  
 
 Скриншот 4 - Доступ к multitool на порту 8080.
 ![Скриншот-4](./img/22.3.1.5.2_Доступ_к_multitool_на_порту_8080.png)
+
+---
+
+## Задание 2. Создать Deployment и обеспечить старт основного контейнера при выполнении условий
+<details>
+	<summary></summary>
+      <br>
+
+1. Создать Deployment приложения nginx и обеспечить старт контейнера только после того, как будет запущен сервис этого приложения.
+2. Убедиться, что nginx не стартует. В качестве Init-контейнера взять busybox.
+3. Создать и запустить Service. Убедиться, что Init запустился.
+4. Продемонстрировать состояние пода до и после запуска сервиса.
+
+</details>
+
+### Решение:
+
+1. Создадим Deployment приложения nginx, в котором обеспечим старт контейнера только после того, как будет запущен сервис этого приложения.
+
+Файл init-deployment.yml.
+```yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-deployment-nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: init-deployment
+  template:
+    metadata:
+      labels:
+        app: init-deployment
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.26
+      initContainers:
+      - name: init-busybox
+        image: busybox:1.36.1
+        command: ['sleep', '30']
+```
+
+С помощью команды `kubectl apply -f init-deployment.yml` отправим манифест в кластер.
+
+2. Убедимся, что nginx не стартует.
+
+C помощью команды `kubectl get pods -o wide` выведем все поды в текущем пространстве имен с подробностями.
+```bash
+baryshnikov@kuber:~$ kubectl get pods -o wide
+NAME                                          READY   STATUS     RESTARTS      AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+deployment-nginx-multitool-7b85dc6548-7hshj   2/2     Running    2 (55m ago)   22h   10.1.106.184   kuber   <none>           <none>
+deployment-nginx-multitool-7b85dc6548-jlxpw   2/2     Running    2 (55m ago)   22h   10.1.106.182   kuber   <none>           <none>
+init-deployment-nginx-855f9b4b77-dfpkk        0/1     Init:0/1   0             16s   10.1.106.133   kuber   <none>           <none>
+multitool-pod                                 1/1     Running    1 (55m ago)   21h   10.1.106.183   kuber   <none>           <none>
+```
+
+3. Создадим и запустим Service.
+
+Файл init-deployment-service.yml.
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: init-deployment-service
+spec:
+  ports:
+    - name: init-nginx
+      port: 80
+      protocol: TCP
+  selector:
+    app: init-deployment
+```
+
+С помощью команды `kubectl apply -f init-deployment-service.yml` отправим манифест в кластер.  
+C помощью команды `kubectl get svc -o wide` выведем все сервисы в текущем пространстве имен с подробностями.
+
+```bash
+baryshnikov@kuber:~$ kubectl get svc -o wide
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)           AGE   SELECTOR
+init-deployment-service   ClusterIP   10.152.183.194   <none>        80/TCP            8s    app=init-deployment
+kubernetes                ClusterIP   10.152.183.1     <none>        443/TCP           22h   <none>
+service-nginx-multitool   ClusterIP   10.152.183.197   <none>        80/TCP,8080/TCP   21h   app=deployment
+```
+
+Проверим, что под запущен:
+```bash
+baryshnikov@kuber:~$ kubectl get pods -o wide
+NAME                                          READY   STATUS    RESTARTS      AGE   IP             NODE    NOMINATED NODE   READINESS GATES
+deployment-nginx-multitool-7b85dc6548-7hshj   2/2     Running   2 (55m ago)   22h   10.1.106.184   kuber   <none>           <none>
+deployment-nginx-multitool-7b85dc6548-jlxpw   2/2     Running   2 (55m ago)   22h   10.1.106.182   kuber   <none>           <none>
+init-deployment-nginx-855f9b4b77-dfpkk        1/1     Running   0             52s   10.1.106.133   kuber   <none>           <none>
+multitool-pod                                 1/1     Running   1 (55m ago)   21h   10.1.106.183   kuber   <none>           <none>
+```
+
+4. Состояние пода до и после запуска сервиса.
+
+Скриншот 5 - Состояние пода `init-deployment-nginx-855f9b4b77-dfpkk` до запуска сервиса.
+![Скриншот-5](./img/22.3.2.4.1_Cостояние_пода_до_запуска_сервиса.png)
+
+Проверим доступ к multitool на порту 8080 с помощью команды `kubectl exec multitool-pod -- curl service-nginx-multitool:8080`.
+
+Скриншот 6 - Состояние пода `init-deployment-nginx-855f9b4b77-dfpkk` после запуска сервиса.
+![Скриншот-6](./img/22.3.2.4.2_Cостояние_пода_после_запуска_сервиса.png)
 
 ---
