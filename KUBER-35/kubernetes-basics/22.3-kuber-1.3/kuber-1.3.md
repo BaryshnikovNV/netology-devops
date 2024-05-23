@@ -353,8 +353,6 @@ multitool-pod                                 1/1     Running   1 (55m ago)   21
 Скриншот 5 - Состояние пода `init-deployment-nginx-855f9b4b77-dfpkk` до запуска сервиса.
 ![Скриншот-5](./img/22.3.2.4.1_Cостояние_пода_до_запуска_сервиса.png)
 
-Проверим доступ к multitool на порту 8080 с помощью команды `kubectl exec multitool-pod -- curl service-nginx-multitool:8080`.
-
 Скриншот 6 - Состояние пода `init-deployment-nginx-855f9b4b77-dfpkk` после запуска сервиса.
 ![Скриншот-6](./img/22.3.2.4.2_Cостояние_пода_после_запуска_сервиса.png)
 
