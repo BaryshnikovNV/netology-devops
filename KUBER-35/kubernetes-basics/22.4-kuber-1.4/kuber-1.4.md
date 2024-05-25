@@ -5,7 +5,7 @@
 
 В тестовой среде Kubernetes необходимо обеспечить доступ к приложению, установленному в предыдущем ДЗ и состоящему из двух контейнеров, по разным портам в разные контейнеры как внутри кластера, так и снаружи.
 
-## Задание 1. Создать Deployment и обеспечить доступ к контейнерам приложения по разным портам из другого Pod внутри кластера
+### Задание 1. Создать Deployment и обеспечить доступ к контейнерам приложения по разным портам из другого Pod внутри кластера
 <details>
 	<summary></summary>
       <br>
@@ -18,7 +18,7 @@
 
 </details>
 
-### Решение:
+#### Решение:
 
 Создадим пространство имен `networking-in-k8s-part1` для ДЗ.
 ```bash
@@ -142,5 +142,55 @@ multitool-pod                                 1/1     Running   0          28s
 
 Скриншот 2 - Доступ к multitool на порту 9002.
 ![Скриншот-2](./img/22.4.1.4.2_Доступ_к_multitool_на_порту_9002.png)
+
+---
+
+### Задание 2. Создать Service и обеспечить доступ к приложениям снаружи кластера
+<details>
+	<summary></summary>
+      <br>
+
+1. Создать отдельный Service приложения из Задания 1 с возможностью доступа снаружи кластера к nginx, используя тип NodePort.
+2. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.
+3. Предоставить манифест и Service в решении, а также скриншоты или вывод команды п.2.
+
+</details>
+
+#### Решение:
+
+1. Создадим отдельный Service приложения из Задания 1 с возможностью доступа снаружи кластера к nginx, используя тип NodePort.
+
+Файл service-nodeport.yml.
+```yml
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-nodeport-nginx
+  namespace: networking-in-k8s-part1
+spec:
+  ports:
+    - name: nginx
+      port: 9001
+      protocol: TCP
+      targetPort: 80
+      nodePort: 30000
+  selector:
+    app: deployment
+  type: NodePort
+```
+
+С помощью команды `kubectl apply -f service-nodeport.yml` отправим манифест в кластер.  
+C помощью команды `kubectl get svc -n networking-in-k8s-part1` выведем все сервисы в пространстве `networking-in-k8s-part1` с подробностями.
+```bash
+baryshnikov@kuber:~$ kubectl get svc -n networking-in-k8s-part1
+NAME                      TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)             AGE
+service-nginx-multitool   ClusterIP   10.152.183.228   <none>        9001/TCP,9002/TCP   91m
+service-nodeport-nginx    NodePort    10.152.183.225   <none>        9001:30000/TCP      19s
+```
+
+2. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.
+
+Скриншот 3 - Доступ к nginx на порту 30000.
+![Скриншот-3](./img/22.4.2.2_Доступ_к_nginx_на_порту_30000.png)
 
 ---
