@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-backend
+  namespace: networking-in-k8s-part2
+spec:
+  ports:
+    - name: multitool
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: back
