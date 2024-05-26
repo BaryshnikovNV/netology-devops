@@ -197,3 +197,176 @@ Commercial support is available at
 ```
 
 ---
+
+### Задание 2. Создать Ingress и обеспечить доступ к приложениям снаружи кластера
+<details>
+	<summary></summary>
+      <br>
+
+1. Включить Ingress-controller в MicroK8S.
+2. Создать Ingress, обеспечивающий доступ снаружи по IP-адресу кластера MicroK8S так, чтобы при запросе только по адресу открывался _frontend_ а при добавлении /api - _backend_.
+3. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.
+4. Предоставить манифесты и скриншоты или вывод команды п.2.
+
+</details>
+
+#### Решение:
+
+1. Включим Ingress-controller в MicroK8S.
+
+```bash
+baryshnikov@kuber:~$ microk8s enable ingress
+Infer repository core for addon ingress
+Enabling Ingress
+ingressclass.networking.k8s.io/public created
+ingressclass.networking.k8s.io/nginx created
+namespace/ingress created
+serviceaccount/nginx-ingress-microk8s-serviceaccount created
+clusterrole.rbac.authorization.k8s.io/nginx-ingress-microk8s-clusterrole created
+role.rbac.authorization.k8s.io/nginx-ingress-microk8s-role created
+clusterrolebinding.rbac.authorization.k8s.io/nginx-ingress-microk8s created
+rolebinding.rbac.authorization.k8s.io/nginx-ingress-microk8s created
+configmap/nginx-load-balancer-microk8s-conf created
+configmap/nginx-ingress-tcp-microk8s-conf created
+configmap/nginx-ingress-udp-microk8s-conf created
+daemonset.apps/nginx-ingress-microk8s-controller created
+Ingress is enabled
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$ microk8s status
+microk8s is running
+high-availability: no
+  datastore master nodes: 127.0.0.1:19001
+  datastore standby nodes: none
+addons:
+  enabled:
+    dashboard            # (core) The Kubernetes dashboard
+    dns                  # (core) CoreDNS
+    ha-cluster           # (core) Configure high availability on the current node
+    helm                 # (core) Helm - the package manager for Kubernetes
+    helm3                # (core) Helm 3 - the package manager for Kubernetes
+    ingress              # (core) Ingress controller for external access
+    metrics-server       # (core) K8s Metrics Server for API access to service metrics
+  disabled:
+    cert-manager         # (core) Cloud native certificate management
+    cis-hardening        # (core) Apply CIS K8s hardening
+    community            # (core) The community addons repository
+    gpu                  # (core) Alias to nvidia add-on
+    host-access          # (core) Allow Pods connecting to Host services smoothly
+    hostpath-storage     # (core) Storage class; allocates storage from host directory
+    kube-ovn             # (core) An advanced network fabric for Kubernetes
+    mayastor             # (core) OpenEBS MayaStor
+    metallb              # (core) Loadbalancer for your Kubernetes cluster
+    minio                # (core) MinIO object storage
+    nvidia               # (core) NVIDIA hardware (GPU and network) support
+    observability        # (core) A lightweight observability stack for logs, traces and metrics
+    prometheus           # (core) Prometheus operator for monitoring and logging
+    rbac                 # (core) Role-Based Access Control for authorisation
+    registry             # (core) Private image registry exposed on localhost:32000
+    rook-ceph            # (core) Distributed Ceph storage using Rook
+    storage              # (core) Alias to hostpath-storage add-on, deprecated
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$ kubectl get ingressclass
+NAME     CONTROLLER             PARAMETERS   AGE
+nginx    k8s.io/ingress-nginx   <none>       38s
+public   k8s.io/ingress-nginx   <none>       38s
+```
+
+2. Создадим Ingress, обеспечивающий доступ снаружи по IP-адресу кластера MicroK8S так, чтобы при запросе только по адресу открывался _frontend_ а при добавлении /api - _backend_.
+
+Файл ingress.yml.
+```yml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  namespace: networking-in-k8s-part2
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host:
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: service-frontend
+              port:
+                name: nginx
+        - path: /api
+          pathType: Prefix
+          backend:
+            service:
+              name: service-backend
+              port:
+                name: multitool
+```
+
+С помощью команды `kubectl apply -f ingress.yml` отправим манифест в кластер.  
+С помощью команды `kubectl get ingress -n networking-in-k8s-part2` проверим состояние добавленного Ingress:
+```bash
+baryshnikov@kuber:~$ kubectl get ingress -n networking-in-k8s-part2
+NAME      CLASS    HOSTS   ADDRESS     PORTS   AGE
+ingress   <none>   *       127.0.0.1   80      28m
+```
+
+```bash
+baryshnikov@kuber:~$ kubectl describe ingress ingress -n networking-in-k8s-part2
+Name:             ingress
+Labels:           <none>
+Namespace:        networking-in-k8s-part2
+Address:          127.0.0.1
+Ingress Class:    <none>
+Default backend:  <default>
+Rules:
+  Host        Path  Backends
+  ----        ----  --------
+  *
+              /      service-frontend:nginx (10.1.106.172:80,10.1.106.177:80,10.1.106.179:80)
+              /api   service-backend:multitool (10.1.106.181:80)
+Annotations:  nginx.ingress.kubernetes.io/rewrite-target: /
+Events:
+  Type    Reason  Age                  From                      Message
+  ----    ------  ----                 ----                      -------
+  Normal  Sync    2m49s (x7 over 28m)  nginx-ingress-controller  Scheduled for sync
+```
+
+3. Продемонстрировать доступ с помощью браузера или `curl` с локального компьютера.
+
+Проверка доступа к приложениям через Ingress:
+```bash
+baryshnikov@kuber:~$ curl 130.193.53.46
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$ curl 130.193.53.46/api
+WBITT Network MultiTool (with NGINX) - backend-c9bbf6f68-zfh6x - 10.1.106.181 - HTTP: 80 , HTTPS: 443 . (Formerly praqma/network-multitool)
+```
+
+---
