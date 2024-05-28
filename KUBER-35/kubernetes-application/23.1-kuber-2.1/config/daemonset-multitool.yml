@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemonset-multitool
+  namespace: storage-in-k8s-part-1
+spec:
+  selector:
+    matchLabels:
+      app: daemonset
+  template:
+    metadata:
+      labels:
+        app: daemonset
+    spec:
+      volumes:
+        - name: host
+          hostPath:
+            path: /var/log
+      containers:
+        - name: multitool
+          image: wbitt/network-multitool
+          volumeMounts:
+            - name: host
+              mountPath: "/var/log/cluster"
