@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-busybox-multitool
+  namespace: storage-in-k8s-part-2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment
+  template:
+    metadata:
+      labels:
+        app: deployment
+    spec:
+      containers:
+        - name: busybox
+          image: dockerhub.timeweb.cloud/busybox
+          command: ['sh', '-c', 'while true; do date >> /static/date.log; sleep 5; done']
+          volumeMounts:
+            - name: my-volume
+              mountPath: /static
+        - name: multitool
+          image: dockerhub.timeweb.cloud/wbitt/network-multitool
+          volumeMounts:
+            - name: my-volume
+              mountPath: /static
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: task-pv-claim
