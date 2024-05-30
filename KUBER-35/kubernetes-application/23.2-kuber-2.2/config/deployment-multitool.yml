@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment
+  template:
+    metadata:
+      labels:
+        app: deployment
+    spec:
+      containers:
+        - name: multitool
+          image: dockerhub.timeweb.cloud/wbitt/network-multitool
+          volumeMounts:
+            - name: my-volume
+              mountPath: /static
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: pvc-nfs

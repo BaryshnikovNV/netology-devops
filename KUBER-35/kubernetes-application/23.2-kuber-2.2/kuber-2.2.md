@@ -184,3 +184,115 @@ date.log
 провайдеров автоматически не удаляются. Если бы в манифесте PV вид политики ReclaimPolicy был указан либо Delete, либо Recycle, то файл бы удалился.
 
 ---
+
+### Задание 2. Создать Deployment приложения, которое может хранить файлы на NFS с динамическим созданием PV.
+<details>
+	<summary></summary>
+      <br>
+
+1. Включить и настроить NFS-сервер на MicroK8S.
+2. Создать Deployment приложения состоящего из multitool, и подключить к нему PV, созданный автоматически на сервере NFS.
+3. Продемонстрировать возможность чтения и записи файла изнутри пода. 
+4. Предоставить манифесты, а также скриншоты или вывод необходимых команд.
+
+</details>
+
+#### Решение:
+
+1. Включим NFS-сервер.
+
+```bash
+baryshnikov@kuber:~$ kubectl get sc
+NAME   PROVISIONER                                       RECLAIMPOLICY   VOLUMEBINDINGMODE   ALLOWVOLUMEEXPANSION   AGE
+nfs    cluster.local/nfs-server-nfs-server-provisioner   Delete          Immediate           true                   86s
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$
+baryshnikov@kuber:~$ kubectl get pod
+NAME                                  READY   STATUS    RESTARTS   AGE
+nfs-server-nfs-server-provisioner-0   1/1     Running   0          118s
+```
+
+2. Создать Deployment приложения состоящего из multitool, и подключить к нему PV, созданный автоматически на сервере NFS.
+
+Создадим PVC.
+
+Файл pvc-nfs.yml.
+```yml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-nfs
+spec:
+  storageClassName: "nfs"
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+```
+
+С помощью команды `kubectl apply -f pvc-nfs.yml` отправим манифест в кластер.  
+C помощью команды `kubectl get pvc` выведем все созданные PVC.
+```bash
+baryshnikov@kuber:~$ kubectl get pvc
+NAME      STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   VOLUMEATTRIBUTESCLASS   AGE
+pvc-nfs   Bound    pvc-7df2d94a-f3ac-4f45-9dde-9b030a3f2f16   10Mi       RWO            nfs            <unset>                 6s
+```
+
+Создадим Deployment.
+
+Файл deployment-multitool.yml.
+```yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-multitool
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: deployment
+  template:
+    metadata:
+      labels:
+        app: deployment
+    spec:
+      containers:
+        - name: multitool
+          image: dockerhub.timeweb.cloud/wbitt/network-multitool
+          volumeMounts:
+            - name: my-volume
+              mountPath: /static
+      volumes:
+        - name: my-volume
+          persistentVolumeClaim:
+            claimName: pvc-nfs
+```
+
+С помощью команды `kubectl apply -f deployment-multitool.yml` отправим манифест в кластер.  
+C помощью команды `kubectl get pods` выведем все поды.  
+```bash
+baryshnikov@kuber:~$ kubectl get pods
+NAME                                   READY   STATUS    RESTARTS   AGE
+deployment-multitool-f44d54d57-grn27   1/1     Running   0          9s
+nfs-server-nfs-server-provisioner-0    1/1     Running   0          36m
+```
+
+3. Проверим возможность чтения и записи файла изнутри пода. 
+
+```bash
+baryshnikov@kuber:~$ kubectl exec -it deployment-multitool-f44d54d57-grn27 -- sh
+/ # ls /
+bin     dev     etc     lib     mnt     proc    run     srv     sys     usr
+certs   docker  home    media   opt     root    sbin    static  tmp     var
+/ # echo Hello World! > /static/test.txt
+/ #
+/ #
+/ # cat /static/test.txt
+Hello World!
+/ #
+/ #
+/ # exit
+```
+
+---
