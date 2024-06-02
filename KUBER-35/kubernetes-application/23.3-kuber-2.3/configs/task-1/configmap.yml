@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-nginx-multitool
+  namespace: application-configuration
+data:
+  HTTP_PORT: "8080"
