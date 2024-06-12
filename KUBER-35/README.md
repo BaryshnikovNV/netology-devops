@@ -16,3 +16,4 @@
 23.2. [Хранение в K8s. Часть 2](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-2.2/KUBER-35/kubernetes-application/23.2-kuber-2.2/kuber-2.2.md)  
 23.3. [Конфигурация приложений](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-2.3/KUBER-35/kubernetes-application/23.3-kuber-2.3/kuber-2.3.md)  
 23.4. [Управление доступом](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-2.4/KUBER-35/kubernetes-application/23.4-kuber-2.4/kuber-2.4.md)  
+23.5. [Helm](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-2.5/KUBER-35/kubernetes-application/23.5-kuber-2.5/kuber-2.5.md)
