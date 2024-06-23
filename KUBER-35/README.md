@@ -22,3 +22,4 @@
 ## Блок 24. "Администрирование Kubernetes"
 
 24.1. [Компоненты Kubernetes](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.1/KUBER-35/kubernetes-administration/24.1-kuber-3.1/kuber-3.1.md)  
+24.2. [Установка Kubernetes](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.2/KUBER-35/kubernetes-administration/24.2-kuber-3.2/kuber-3.2.md)  
