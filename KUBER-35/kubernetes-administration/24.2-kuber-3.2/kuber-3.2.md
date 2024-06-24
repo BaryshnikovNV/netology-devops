@@ -71,9 +71,9 @@ baryshnikov@debian:~$ yc vpc subnet list
 Далее, запустим скрипт создания ВМ в Yandex Cloud с помощью комадны `bash create-vm.bash`.
 
 Скриншот 1 - Cозданные ВМ в Yandex Cloud.
-![Скриншот-1](./img/24.2.1_Cозданные_ВМ_в_Yandex_Cloud.png)
+![Скриншот-1](./img/24.2.1.1_Cозданные_ВМ_в_Yandex_Cloud.png)
 
-С помощью команды `ssh yc-user@158.160.126.175` зайдем на мастер ноду.
+С помощью команды `ssh yc-user@158.160.108.86` зайдем на мастер ноду.
 
 Подготовим ВМ для установки `python3.11`
 <details>
@@ -83,25 +83,10 @@ baryshnikov@debian:~$ yc vpc subnet list
 ```bash
 yc-user@master-node:~$ sudo apt-get update -y
 Hit:1 http://mirror.yandex.ru/ubuntu jammy InRelease
-Get:2 http://mirror.yandex.ru/ubuntu jammy-updates InRelease [128 kB]
+Hit:2 http://mirror.yandex.ru/ubuntu jammy-updates InRelease
 Hit:3 http://mirror.yandex.ru/ubuntu jammy-backports InRelease
-Get:4 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
-Get:5 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 Packages [1,734 kB]
-Get:6 http://mirror.yandex.ru/ubuntu jammy-updates/main Translation-en [319 kB]
-Get:7 http://mirror.yandex.ru/ubuntu jammy-updates/restricted amd64 Packages [1,997 kB]
-Get:8 http://mirror.yandex.ru/ubuntu jammy-updates/restricted Translation-en [339 kB]
-Get:9 http://mirror.yandex.ru/ubuntu jammy-updates/universe amd64 Packages [1,087 kB]
-Get:10 http://mirror.yandex.ru/ubuntu jammy-updates/universe Translation-en [251 kB]
-Get:11 http://mirror.yandex.ru/ubuntu jammy-updates/multiverse amd64 Packages [43.3 kB]
-Get:12 http://mirror.yandex.ru/ubuntu jammy-updates/multiverse Translation-en [10.8 kB]
-Get:13 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [1,526 kB]
-Get:14 http://security.ubuntu.com/ubuntu jammy-security/main Translation-en [261 kB]
-Get:15 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [1,937 kB]
-Get:16 http://security.ubuntu.com/ubuntu jammy-security/restricted Translation-en [330 kB]
-Get:17 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [860 kB]
-Get:18 http://security.ubuntu.com/ubuntu jammy-security/universe Translation-en [167 kB]
-Fetched 11.1 MB in 2s (4,718 kB/s)                          
-Reading package lists... Done
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease
+Reading package lists... Done                        
 yc-user@master-node:~$ 
 yc-user@master-node:~$ 
 yc-user@master-node:~$ sudo apt install software-properties-common
@@ -181,13 +166,13 @@ Adding deb entry to /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-jammy.list
 Adding disabled deb-src entry to /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-jammy.list
 Adding key to /etc/apt/trusted.gpg.d/deadsnakes-ubuntu-ppa.gpg with fingerprint F23C5A6CF475977595C89F51BA6932366A755776
 Hit:1 http://mirror.yandex.ru/ubuntu jammy InRelease
-Hit:2 http://mirror.yandex.ru/ubuntu jammy-updates InRelease                                                   
-Hit:3 http://mirror.yandex.ru/ubuntu jammy-backports InRelease                                                 
-Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease                                               
-Get:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease [18.1 kB]                         
+Hit:2 http://mirror.yandex.ru/ubuntu jammy-updates InRelease                                    
+Hit:3 http://mirror.yandex.ru/ubuntu jammy-backports InRelease                                  
+Hit:4 http://security.ubuntu.com/ubuntu jammy-security InRelease                                                 
+Get:5 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy InRelease [18.1 kB]                           
 Get:6 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 Packages [23.6 kB]
 Get:7 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main Translation-en [4,800 B]
-Fetched 46.4 kB in 1s (57.6 kB/s)           
+Fetched 46.4 kB in 1s (50.9 kB/s)           
 Reading package lists... Done
 yc-user@master-node:~$ 
 yc-user@master-node:~$ 
@@ -237,72 +222,72 @@ Get:2 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 linux-libc-dev amd
 Get:3 http://mirror.yandex.ru/ubuntu jammy/main amd64 libcrypt-dev amd64 1:4.4.27-1 [112 kB]
 Get:4 http://mirror.yandex.ru/ubuntu jammy/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu6 [68.5 kB]
 Get:5 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libtirpc-dev amd64 1.3.2-2ubuntu0.1 [192 kB]
-Get:6 http://mirror.yandex.ru/ubuntu jammy/main amd64 libnsl-dev amd64 1.3.0-2build2 [71.3 kB]  
+Get:6 http://mirror.yandex.ru/ubuntu jammy/main amd64 libnsl-dev amd64 1.3.0-2build2 [71.3 kB] 
 Get:7 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libc6-dev amd64 2.35-0ubuntu3.8 [2,100 kB]
 Get:8 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 gcc-11-base amd64 11.4.0-1ubuntu1~22.04 [20.2 kB]
 Get:9 http://mirror.yandex.ru/ubuntu jammy/main amd64 libisl23 amd64 0.24-2build1 [727 kB]
 Get:10 http://mirror.yandex.ru/ubuntu jammy/main amd64 libmpc3 amd64 1.2.1-2build1 [46.9 kB]
 Get:11 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 cpp-11 amd64 11.4.0-1ubuntu1~22.04 [10.0 MB]
-Get:12 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 libpython3.11-minimal amd64 3.11.9-1+jammy1 [884 kB]
-Get:13 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 python3.11-minimal amd64 3.11.9-1+jammy1 [2,355 kB]
-Get:14 http://mirror.yandex.ru/ubuntu jammy/main amd64 cpp amd64 4:11.2.0-1ubuntu1 [27.7 kB]
-Get:15 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libcc1-0 amd64 12.3.0-1ubuntu1~22.04 [48.3 kB]
-Get:16 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libgomp1 amd64 12.3.0-1ubuntu1~22.04 [126 kB]
-Get:17 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libitm1 amd64 12.3.0-1ubuntu1~22.04 [30.2 kB]
-Get:18 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libatomic1 amd64 12.3.0-1ubuntu1~22.04 [10.4 kB]
-Get:19 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libasan6 amd64 11.4.0-1ubuntu1~22.04 [2,282 kB]
-Get:20 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 libpython3.11-stdlib amd64 3.11.9-1+jammy1 [1,925 kB]
-Get:21 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 liblsan0 amd64 12.3.0-1ubuntu1~22.04 [1,069 kB]
-Get:22 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libtsan0 amd64 11.4.0-1ubuntu1~22.04 [2,260 kB]
-Get:23 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 python3.11 amd64 3.11.9-1+jammy1 [640 kB]
-Get:24 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libubsan1 amd64 12.3.0-1ubuntu1~22.04 [976 kB]
-Get:25 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libquadmath0 amd64 12.3.0-1ubuntu1~22.04 [154 kB]
-Get:26 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libgcc-11-dev amd64 11.4.0-1ubuntu1~22.04 [2,517 kB]
-Get:27 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 gcc-11 amd64 11.4.0-1ubuntu1~22.04 [20.1 MB]
-Get:28 http://mirror.yandex.ru/ubuntu jammy/main amd64 gcc amd64 4:11.2.0-1ubuntu1 [5,112 B]
-Get:29 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libstdc++-11-dev amd64 11.4.0-1ubuntu1~22.04 [2,101 kB]
-Get:30 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 g++-11 amd64 11.4.0-1ubuntu1~22.04 [11.4 MB]
-Get:31 http://mirror.yandex.ru/ubuntu jammy/main amd64 g++ amd64 4:11.2.0-1ubuntu1 [1,412 B]
-Get:32 http://mirror.yandex.ru/ubuntu jammy/main amd64 make amd64 4.3-4.1build1 [180 kB]
-Get:33 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.3 [237 kB]
-Get:34 http://mirror.yandex.ru/ubuntu jammy/main amd64 bzip2 amd64 1.0.8-5build1 [34.8 kB]
-Get:35 http://mirror.yandex.ru/ubuntu jammy/main amd64 lto-disabled-list all 24 [12.5 kB]
-Get:36 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 dpkg-dev all 1.21.1ubuntu2.3 [922 kB]
-Get:37 http://mirror.yandex.ru/ubuntu jammy/main amd64 build-essential amd64 12.9ubuntu3 [4,744 B]
-Get:38 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfakeroot amd64 1.28-1ubuntu1 [31.5 kB]
-Get:39 http://mirror.yandex.ru/ubuntu jammy/main amd64 fakeroot amd64 1.28-1ubuntu1 [60.4 kB]
-Get:40 http://mirror.yandex.ru/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1,041 kB]
-Get:41 http://mirror.yandex.ru/ubuntu jammy/main amd64 fontconfig-config all 2.13.1-4.2ubuntu5 [29.1 kB]
-Get:42 http://mirror.yandex.ru/ubuntu jammy/main amd64 javascript-common all 11+nmu1 [5,936 B]
-Get:43 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-diff-perl all 1.201-1 [41.8 kB]
-Get:44 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-diff-xs-perl amd64 0.04-6build3 [11.9 kB]
-Get:45 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-merge-perl all 0.08-3 [12.0 kB]
-Get:46 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfontconfig1 amd64 2.13.1-4.2ubuntu5 [131 kB]
-Get:47 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjpeg-turbo8 amd64 2.1.2-0ubuntu1 [134 kB]
-Get:48 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjpeg8 amd64 8c-2ubuntu10 [2,264 B]
-Get:49 http://mirror.yandex.ru/ubuntu jammy/main amd64 libdeflate0 amd64 1.10-2 [70.9 kB]
-Get:50 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libjbig0 amd64 2.1-3.1ubuntu0.22.04.1 [29.2 kB]
-Get:51 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libwebp7 amd64 1.2.2-2ubuntu0.22.04.2 [206 kB]
-Get:52 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libtiff5 amd64 4.3.0-6ubuntu0.9 [185 kB]
-Get:53 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libxpm4 amd64 1:3.5.12-1ubuntu0.22.04.2 [36.7 kB]
-Get:54 http://mirror.yandex.ru/ubuntu jammy/main amd64 libgd3 amd64 2.3.0-2ubuntu2 [129 kB]
-Get:55 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libc-devtools amd64 2.35-0ubuntu3.8 [28.9 kB]
-Get:56 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.3 [147 kB]
-Get:57 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfile-fcntllock-perl amd64 0.22-3build7 [33.9 kB]
-Get:58 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-jquery all 3.6.0+dfsg+~3.5.13-1 [321 kB]
-Get:59 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-underscore all 1.13.2~dfsg-2 [118 kB]
-Get:60 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-sphinxdoc all 4.3.2-1 [139 kB]
-Get:61 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
-Get:62 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libpython3.10-dev amd64 3.10.12-1~22.04.3 [4,762 kB]
-Get:63 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libpython3-dev amd64 3.10.6-1~22.04 [7,166 B]
-Get:64 http://mirror.yandex.ru/ubuntu jammy/main amd64 mailcap all 3.70+nmu1ubuntu1 [23.8 kB]
-Get:65 http://mirror.yandex.ru/ubuntu jammy/main amd64 mime-support all 3.66 [3,696 B]
-Get:66 http://mirror.yandex.ru/ubuntu jammy/main amd64 manpages-dev all 5.10-1ubuntu1 [2,309 kB]
-Get:67 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 python3.10-dev amd64 3.10.12-1~22.04.3 [507 kB]
-Get:68 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 python3-dev amd64 3.10.6-1~22.04 [26.0 kB]
-Get:69 http://mirror.yandex.ru/ubuntu jammy-updates/universe amd64 python3-wheel all 0.37.1-2ubuntu0.22.04.1 [32.0 kB]
-Get:70 http://mirror.yandex.ru/ubuntu jammy-updates/universe amd64 python3-pip all 22.0.2+dfsg-1ubuntu0.4 [1,305 kB]
-Fetched 77.2 MB in 4s (20.0 MB/s)       
+Get:12 http://mirror.yandex.ru/ubuntu jammy/main amd64 cpp amd64 4:11.2.0-1ubuntu1 [27.7 kB]
+Get:13 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libcc1-0 amd64 12.3.0-1ubuntu1~22.04 [48.3 kB]
+Get:14 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libgomp1 amd64 12.3.0-1ubuntu1~22.04 [126 kB]
+Get:15 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 libpython3.11-minimal amd64 3.11.9-1+jammy1 [884 kB]
+Get:16 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libitm1 amd64 12.3.0-1ubuntu1~22.04 [30.2 kB]
+Get:17 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libatomic1 amd64 12.3.0-1ubuntu1~22.04 [10.4 kB]
+Get:18 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libasan6 amd64 11.4.0-1ubuntu1~22.04 [2,282 kB]
+Get:19 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 liblsan0 amd64 12.3.0-1ubuntu1~22.04 [1,069 kB]
+Get:20 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libtsan0 amd64 11.4.0-1ubuntu1~22.04 [2,260 kB]
+Get:21 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libubsan1 amd64 12.3.0-1ubuntu1~22.04 [976 kB]
+Get:22 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libquadmath0 amd64 12.3.0-1ubuntu1~22.04 [154 kB]
+Get:23 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libgcc-11-dev amd64 11.4.0-1ubuntu1~22.04 [2,517 kB]
+Get:24 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 gcc-11 amd64 11.4.0-1ubuntu1~22.04 [20.1 MB]
+Get:25 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 python3.11-minimal amd64 3.11.9-1+jammy1 [2,355 kB]
+Get:26 http://mirror.yandex.ru/ubuntu jammy/main amd64 gcc amd64 4:11.2.0-1ubuntu1 [5,112 B]
+Get:27 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libstdc++-11-dev amd64 11.4.0-1ubuntu1~22.04 [2,101 kB]
+Get:28 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 g++-11 amd64 11.4.0-1ubuntu1~22.04 [11.4 MB]
+Get:29 http://mirror.yandex.ru/ubuntu jammy/main amd64 g++ amd64 4:11.2.0-1ubuntu1 [1,412 B]
+Get:30 http://mirror.yandex.ru/ubuntu jammy/main amd64 make amd64 4.3-4.1build1 [180 kB]
+Get:31 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libdpkg-perl all 1.21.1ubuntu2.3 [237 kB]
+Get:32 http://mirror.yandex.ru/ubuntu jammy/main amd64 bzip2 amd64 1.0.8-5build1 [34.8 kB]
+Get:33 http://mirror.yandex.ru/ubuntu jammy/main amd64 lto-disabled-list all 24 [12.5 kB]
+Get:34 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 dpkg-dev all 1.21.1ubuntu2.3 [922 kB]
+Get:35 http://mirror.yandex.ru/ubuntu jammy/main amd64 build-essential amd64 12.9ubuntu3 [4,744 B]
+Get:36 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfakeroot amd64 1.28-1ubuntu1 [31.5 kB]
+Get:37 http://mirror.yandex.ru/ubuntu jammy/main amd64 fakeroot amd64 1.28-1ubuntu1 [60.4 kB]
+Get:38 http://mirror.yandex.ru/ubuntu jammy/main amd64 fonts-dejavu-core all 2.37-2build1 [1,041 kB]
+Get:39 http://mirror.yandex.ru/ubuntu jammy/main amd64 fontconfig-config all 2.13.1-4.2ubuntu5 [29.1 kB]
+Get:40 http://mirror.yandex.ru/ubuntu jammy/main amd64 javascript-common all 11+nmu1 [5,936 B]
+Get:41 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-diff-perl all 1.201-1 [41.8 kB]
+Get:42 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-diff-xs-perl amd64 0.04-6build3 [11.9 kB]
+Get:43 http://mirror.yandex.ru/ubuntu jammy/main amd64 libalgorithm-merge-perl all 0.08-3 [12.0 kB]  
+Get:44 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfontconfig1 amd64 2.13.1-4.2ubuntu5 [131 kB]
+Get:45 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjpeg-turbo8 amd64 2.1.2-0ubuntu1 [134 kB]
+Get:46 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjpeg8 amd64 8c-2ubuntu10 [2,264 B]
+Get:47 http://mirror.yandex.ru/ubuntu jammy/main amd64 libdeflate0 amd64 1.10-2 [70.9 kB]
+Get:48 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libjbig0 amd64 2.1-3.1ubuntu0.22.04.1 [29.2 kB]
+Get:49 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libwebp7 amd64 1.2.2-2ubuntu0.22.04.2 [206 kB]
+Get:50 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libtiff5 amd64 4.3.0-6ubuntu0.9 [185 kB]
+Get:51 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libxpm4 amd64 1:3.5.12-1ubuntu0.22.04.2 [36.7 kB]
+Get:52 http://mirror.yandex.ru/ubuntu jammy/main amd64 libgd3 amd64 2.3.0-2ubuntu2 [129 kB]
+Get:53 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libc-devtools amd64 2.35-0ubuntu3.8 [28.9 kB]
+Get:54 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libexpat1-dev amd64 2.4.7-1ubuntu0.3 [147 kB]
+Get:55 http://mirror.yandex.ru/ubuntu jammy/main amd64 libfile-fcntllock-perl amd64 0.22-3build7 [33.9 kB]
+Get:56 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-jquery all 3.6.0+dfsg+~3.5.13-1 [321 kB]
+Get:57 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-underscore all 1.13.2~dfsg-2 [118 kB]
+Get:58 http://mirror.yandex.ru/ubuntu jammy/main amd64 libjs-sphinxdoc all 4.3.2-1 [139 kB]
+Get:59 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 zlib1g-dev amd64 1:1.2.11.dfsg-2ubuntu9.2 [164 kB]
+Get:60 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libpython3.10-dev amd64 3.10.12-1~22.04.3 [4,762 kB]
+Get:61 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 libpython3.11-stdlib amd64 3.11.9-1+jammy1 [1,925 kB]
+Get:62 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 libpython3-dev amd64 3.10.6-1~22.04 [7,166 B]
+Get:63 http://mirror.yandex.ru/ubuntu jammy/main amd64 mailcap all 3.70+nmu1ubuntu1 [23.8 kB]
+Get:64 http://mirror.yandex.ru/ubuntu jammy/main amd64 mime-support all 3.66 [3,696 B]
+Get:65 http://mirror.yandex.ru/ubuntu jammy/main amd64 manpages-dev all 5.10-1ubuntu1 [2,309 kB]
+Get:66 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 python3.10-dev amd64 3.10.12-1~22.04.3 [507 kB]
+Get:67 http://mirror.yandex.ru/ubuntu jammy-updates/main amd64 python3-dev amd64 3.10.6-1~22.04 [26.0 kB]
+Get:68 http://mirror.yandex.ru/ubuntu jammy-updates/universe amd64 python3-wheel all 0.37.1-2ubuntu0.22.04.1 [32.0 kB]
+Get:69 http://mirror.yandex.ru/ubuntu jammy-updates/universe amd64 python3-pip all 22.0.2+dfsg-1ubuntu0.4 [1,305 kB]
+Get:70 https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu jammy/main amd64 python3.11 amd64 3.11.9-1+jammy1 [640 kB]
+Fetched 77.2 MB in 6s (12.4 MB/s)                                                                                            
 Extracting templates from packages: 100%
 Selecting previously unselected package libpython3.11-minimal:amd64.
 (Reading database ... 110126 files and directories currently installed.)
@@ -613,14 +598,14 @@ root@master-node:~#
 root@master-node:~# curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 2222k  100 2222k    0     0  6051k      0 --:--:-- --:--:-- --:--:-- 6040k
+100 2222k  100 2222k    0     0  6705k      0 --:--:-- --:--:-- --:--:-- 6715k
 root@master-node:~# 
 root@master-node:~# 
 root@master-node:~# python3.11 get-pip.py
 Collecting pip
   Downloading pip-24.1-py3-none-any.whl.metadata (3.6 kB)
 Downloading pip-24.1-py3-none-any.whl (1.8 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 13.2 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 6.8 MB/s eta 0:00:00
 Installing collected packages: pip
   Attempting uninstall: pip
     Found existing installation: pip 22.0.2
@@ -637,12 +622,12 @@ root@master-node:~# logout
 ```bash
 yc-user@master-node:~$ git clone https://github.com/kubernetes-sigs/kubespray.git
 Cloning into 'kubespray'...
-remote: Enumerating objects: 74847, done.
-remote: Counting objects: 100% (628/628), done.
-remote: Compressing objects: 100% (398/398), done.
-remote: Total 74847 (delta 302), reused 437 (delta 208), pack-reused 74219
-Receiving objects: 100% (74847/74847), 23.65 MiB | 19.53 MiB/s, done.
-Resolving deltas: 100% (42172/42172), done.
+remote: Enumerating objects: 74874, done.
+remote: Counting objects: 100% (652/652), done.
+remote: Compressing objects: 100% (418/418), done.
+remote: Total 74874 (delta 316), reused 450 (delta 212), pack-reused 74222
+Receiving objects: 100% (74874/74874), 23.66 MiB | 14.47 MiB/s, done.
+Resolving deltas: 100% (42188/42188), done.
 yc-user@master-node:~$ 
 yc-user@master-node:~$ 
 yc-user@master-node:~$ cd kubespray/
@@ -704,23 +689,23 @@ Collecting resolvelib<1.1.0,>=0.5.3 (from ansible-core~=2.16.7->ansible==9.6.0->
 WARNING: The candidate selected for download or install is a yanked version: 'ansible' candidate (version 9.6.0 at https://files.pythonhosted.org/packages/8c/04/e3f5bc1c6784fe30c9fcfe4f89cc24a9695211224405573cb189f51629f5/ansible-9.6.0-py3-none-any.whl (from https://pypi.org/simple/ansible/) (requires-python:>=3.10))
 Reason for being yanked: contains extra files which shouldn't be included 
 Downloading ansible-9.6.0-py3-none-any.whl (54.2 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.2/54.2 MB 3.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.2/54.2 MB 3.9 MB/s eta 0:00:00
 Downloading jmespath-1.0.1-py3-none-any.whl (20 kB)
 Downloading jsonschema-4.22.0-py3-none-any.whl (88 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.3/88.3 kB 3.3 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 88.3/88.3 kB 5.0 MB/s eta 0:00:00
 Downloading netaddr-1.2.1-py3-none-any.whl (2.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 39.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 27.4 MB/s eta 0:00:00
 Downloading ansible_core-2.16.8-py3-none-any.whl (2.3 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 46.8 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 13.9 MB/s eta 0:00:00
 Downloading attrs-23.2.0-py3-none-any.whl (60 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.8/60.8 kB 2.5 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 60.8/60.8 kB 628.9 kB/s eta 0:00:00
 Downloading jsonschema_specifications-2023.12.1-py3-none-any.whl (18 kB)
 Downloading referencing-0.35.1-py3-none-any.whl (26 kB)
 Downloading rpds_py-0.18.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (1.1 MB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 57.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.1/1.1 MB 38.1 MB/s eta 0:00:00
 Downloading resolvelib-1.0.1-py2.py3-none-any.whl (17 kB)
 Downloading packaging-24.1-py3-none-any.whl (53 kB)
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.0/54.0 kB 2.4 MB/s eta 0:00:00
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 54.0/54.0 kB 2.3 MB/s eta 0:00:00
 Installing collected packages: resolvelib, rpds-py, packaging, netaddr, jmespath, attrs, referencing, ansible-core, jsonschema-specifications, ansible, jsonschema
   WARNING: The script netaddr is installed in '/home/yc-user/.local/bin' which is not on PATH.
   Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
@@ -740,30 +725,30 @@ Successfully installed ansible-9.6.0 ansible-core-2.16.8 attrs-23.2.0 jmespath-1
 Объявим список ip всех нод в переменную IPS
 ```bash
 baryshnikov@debian:~$ yc compute instance list
-+----------------------+---------------+---------------+---------+-----------------+-------------+
-|          ID          |     NAME      |    ZONE ID    | STATUS  |   EXTERNAL IP   | INTERNAL IP |
-+----------------------+---------------+---------------+---------+-----------------+-------------+
-| fhm47avlvopiu0cohjo0 | worker-node-3 | ru-central1-a | RUNNING | 51.250.93.17    | 10.1.2.32   |
-| fhmbvl30tmlo2tmpc1rb | worker-node-1 | ru-central1-a | RUNNING | 158.160.119.164 | 10.1.2.5    |
-| fhmdjvlcc9nv2mlmp29j | worker-node-4 | ru-central1-a | RUNNING | 158.160.126.178 | 10.1.2.15   |
-| fhmk04m93na1errmgotm | worker-node-2 | ru-central1-a | RUNNING | 158.160.100.163 | 10.1.2.14   |
-| fhmpcb0i2to1a83ntk35 | master-node   | ru-central1-a | RUNNING | 158.160.126.175 | 10.1.2.20   |
-+----------------------+---------------+---------------+---------+-----------------+-------------+
++----------------------+---------------+---------------+---------+----------------+-------------+
+|          ID          |     NAME      |    ZONE ID    | STATUS  |  EXTERNAL IP   | INTERNAL IP |
++----------------------+---------------+---------------+---------+----------------+-------------+
+| fhm12ajlmbv0ghdumt76 | worker-node-4 | ru-central1-a | RUNNING | 51.250.12.129  | 10.1.2.31   |
+| fhmdbri3oou4fn858hi0 | worker-node-2 | ru-central1-a | RUNNING | 51.250.11.5    | 10.1.2.35   |
+| fhmt5vh6ms9u2t40aqks | worker-node-1 | ru-central1-a | RUNNING | 158.160.97.141 | 10.1.2.4    |
+| fhmumoha80kh9gjsieku | master-node   | ru-central1-a | RUNNING | 158.160.108.86 | 10.1.2.21   |
+| fhmvo6gf6ojcd4t0ue1g | worker-node-3 | ru-central1-a | RUNNING | 51.250.82.66   | 10.1.2.23   |
++----------------------+---------------+---------------+---------+----------------+-------------+
 
 baryshnikov@debian:~$ 
 baryshnikov@debian:~$ 
-baryshnikov@debian:~$ ssh yc-user@158.160.126.175
+baryshnikov@debian:~$ ssh yc-user@158.160.108.86
 Welcome to Ubuntu 22.04.4 LTS (GNU/Linux 5.15.0-112-generic x86_64)
 
  * Documentation:  https://help.ubuntu.com
  * Management:     https://landscape.canonical.com
  * Support:        https://ubuntu.com/pro
 
- System information as of Sun Jun 23 07:59:28 AM UTC 2024
+ System information as of Mon Jun 24 03:39:05 PM UTC 2024
 
-  System load:  0.0                Processes:             132
-  Usage of /:   25.2% of 19.59GB   Users logged in:       0
-  Memory usage: 17%                IPv4 address for eth0: 10.1.2.20
+  System load:  0.06               Processes:             133
+  Usage of /:   25.1% of 19.59GB   Users logged in:       0
+  Memory usage: 17%                IPv4 address for eth0: 10.1.2.21
   Swap usage:   0%
 
 
@@ -775,13 +760,13 @@ Enable ESM Apps to receive additional future security updates.
 See https://ubuntu.com/esm or run: sudo pro status
 
 
-Last login: Sun Jun 23 07:36:54 2024 from 212.193.22.103
+Last login: Mon Jun 24 15:17:18 2024 from 212.193.22.103
 yc-user@master-node:~$ 
 yc-user@master-node:~$ 
 yc-user@master-node:~$ cd kubespray/
 yc-user@master-node:~/kubespray$ 
 yc-user@master-node:~/kubespray$ 
-yc-user@master-node:~/kubespray$ declare -a IPS=(158.160.126.175 158.160.119.164 158.160.100.163 51.250.93.17 158.160.126.178)
+yc-user@master-node:~/kubespray$ declare -a IPS=(10.1.2.21 10.1.2.4 10.1.2.35 10.1.2.23 10.1.2.31)
 ```
 
 Сгенерируем динаммический инвентарь
@@ -812,8 +797,8 @@ DEBUG: adding host node5 to group kube_node
 
 Скопируем на мастер приватный ключ
 ```bash
-baryshnikov@debian:~$ scp ~/.ssh/id_rsa yc-user@158.160.126.175:.ssh
-id_rsa                                                            100% 2655    44.5KB/s   00:00    
+baryshnikov@debian:~$ scp ~/.ssh/id_rsa yc-user@158.160.108.86:.ssh
+id_rsa                                                                                      100% 2655    75.8KB/s   00:00    
 ```
 
 Меняем права на ключ с помощью команды `sudo chmod 600 ~/.ssh/id_rsa`.
@@ -823,29 +808,29 @@ id_rsa                                                            100% 2655    4
 all:
   hosts:
     master-node:
-      ansible_host: 158.160.126.175
-      ip: 158.160.126.175
-      access_ip: 158.160.126.175
+      ansible_host: 10.1.2.21
+      ip: 10.1.2.21
+      access_ip: 10.1.2.21
       ansible_user: yc-user
     worker-node-1:
-      ansible_host: 158.160.119.164
-      ip: 158.160.119.164
-      access_ip: 158.160.119.164
+      ansible_host: 10.1.2.4
+      ip: 10.1.2.4
+      access_ip: 10.1.2.4
       ansible_user: yc-user
     worker-node-2:
-      ansible_host: 158.160.100.163
-      ip: 158.160.100.163
-      access_ip: 158.160.100.163
+      ansible_host: 10.1.2.35
+      ip: 10.1.2.35
+      access_ip: 10.1.2.35
       ansible_user: yc-user
     worker-node-3:
-      ansible_host: 51.250.93.17
-      ip: 51.250.93.17
-      access_ip: 51.250.93.17
+      ansible_host: 10.1.2.23
+      ip: 10.1.2.23
+      access_ip: 10.1.2.23
       ansible_user: yc-user
     worker-node-4:
-      ansible_host: 158.160.126.178
-      ip: 158.160.126.178
-      access_ip: 158.160.126.178
+      ansible_host: 10.1.2.31
+      ip: 10.1.2.31
+      access_ip: 10.1.2.31
       ansible_user: yc-user
   children:
     kube_control_plane:
@@ -868,8 +853,63 @@ all:
       hosts: {}
 ```
 
-Запускаем playbook:
+Запустим playbook:
 ```bash
 ansible-playbook -i inventory/mycluster/hosts.yaml cluster.yml -b -v
+```
+
+Скриншот 2 - Результат выполнения ansible-playbook.
+![Скриншот-2](./img/24.2.1.2_Выполнение_ansible-playbook.png)
+
+Проверим версию kubectl.
+```bash
+yc-user@master-node:~/kubespray$ sudo kubectl version
+Client Version: v1.29.5
+Kustomize Version: v5.0.4-0.20230601165947-6ce0bf390ce3
+Server Version: v1.29.5
+```
+
+Проверим статус нод
+```bash
+yc-user@master-node:~/kubespray$ kubectl get nodes
+NAME            STATUS   ROLES           AGE   VERSION
+master-node     Ready    control-plane   11m   v1.29.5
+worker-node-1   Ready    <none>          11m   v1.29.5
+worker-node-2   Ready    <none>          11m   v1.29.5
+worker-node-3   Ready    <none>          11m   v1.29.5
+worker-node-4   Ready    <none>          11m   v1.29.5
+```
+
+Проверим pods
+```bash
+yc-user@master-node:~/kubespray$ kubectl get po -A
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS        AGE
+kube-system   calico-kube-controllers-68485cbf9c-gxxfj   1/1     Running   0               10m
+kube-system   calico-node-4fmgw                          1/1     Running   0               11m
+kube-system   calico-node-8fj7w                          1/1     Running   0               10m
+kube-system   calico-node-drwp9                          1/1     Running   0               11m
+kube-system   calico-node-ffq2k                          1/1     Running   0               11m
+kube-system   calico-node-tj5x9                          1/1     Running   0               10m
+kube-system   coredns-69db55dd76-kkskx                   1/1     Running   0               9m36s
+kube-system   coredns-69db55dd76-zqqtk                   1/1     Running   0               9m50s
+kube-system   dns-autoscaler-6f4b597d8c-92m82            1/1     Running   0               9m46s
+kube-system   kube-apiserver-master-node                 1/1     Running   1               12m
+kube-system   kube-controller-manager-master-node        1/1     Running   3 (8m46s ago)   12m
+kube-system   kube-proxy-94wxr                           1/1     Running   0               11m
+kube-system   kube-proxy-9hp5d                           1/1     Running   0               11m
+kube-system   kube-proxy-hpv9g                           1/1     Running   0               11m
+kube-system   kube-proxy-p5njc                           1/1     Running   0               11m
+kube-system   kube-proxy-xgssw                           1/1     Running   0               11m
+kube-system   kube-scheduler-master-node                 1/1     Running   1               12m
+kube-system   nginx-proxy-worker-node-1                  1/1     Running   0               11m
+kube-system   nginx-proxy-worker-node-2                  1/1     Running   0               11m
+kube-system   nginx-proxy-worker-node-3                  1/1     Running   0               11m
+kube-system   nginx-proxy-worker-node-4                  1/1     Running   0               11m
+kube-system   nodelocaldns-2gh79                         1/1     Running   0               9m45s
+kube-system   nodelocaldns-2nsfw                         1/1     Running   0               9m45s
+kube-system   nodelocaldns-4ct4k                         1/1     Running   0               9m45s
+kube-system   nodelocaldns-5zmh5                         1/1     Running   0               9m45s
+kube-system   nodelocaldns-vz8rq                         1/1     Running   0               9m45s
+```
 
 ---
