@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-back-to-cache
+  namespace: app
+spec:
+  podSelector:
+    matchLabels:
+      app: cache
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: back
+  policyTypes:
+  - Ingress
