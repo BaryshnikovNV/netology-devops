@@ -99,7 +99,7 @@ WBITT Network MultiTool (with NGINX) - backend-c9bbf6f68-r8t56 - 10.1.106.143 - 
 Создадим сетевую политику запрещающий весь трафик между подами в кластере.
 
 Файл deny.yml
-```
+```yml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -135,7 +135,7 @@ baryshnikov@kuber:~$ kubectl exec -n app backend-c9bbf6f68-r8t56 -- curl service
 Создалим политику, чтобы обеспечить доступ frontend -> backend:
 
 Файл allow-front-to-back.yml
-```bash
+```yml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -198,7 +198,7 @@ WBITT Network MultiTool (with NGINX) - backend-c9bbf6f68-r8t56 - 10.1.106.145 - 
 Создалим политику, чтобы обеспечить доступ backend -> cache:
 
 Файл allow-back-to-cache.yml
-```bash
+```yml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
