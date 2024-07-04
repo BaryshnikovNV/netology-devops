@@ -25,3 +25,4 @@
 24.2. [Установка Kubernetes](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.2/KUBER-35/kubernetes-administration/24.2-kuber-3.2/kuber-3.2.md)  
 24.3. [Как работает сеть в K8s](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.3/KUBER-35/kubernetes-administration/24.3-kuber-3.3/kuber-3.3.md)  
 24.4. [Обновление приложений](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.4/KUBER-35/kubernetes-administration/24.4-kuber-3.4/kuber-3.4.md)  
+24.5. [Troubleshooting](https://github.com/BaryshnikovNV/netology-devops/blob/kuber-3.5/KUBER-35/kubernetes-administration/24.5-kuber-3.5/kuber-3.5.md)
