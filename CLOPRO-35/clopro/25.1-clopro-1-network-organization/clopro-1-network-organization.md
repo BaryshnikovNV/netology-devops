@@ -48,9 +48,9 @@ resource "yandex_vpc_subnet" "public" {
 }
 ```
 
-- Создадим в этой подсети (NAT-инстанс)[./config/nat-instance.tf], присвоив ему адрес 192.168.10.254. В качестве image_id используем fd80mrhj8fl2oe87o4e1.
+- Создадим в этой подсети [NAT-инстанс](./config/nat-instance.tf), присвоив ему адрес 192.168.10.254. В качестве image_id используем fd80mrhj8fl2oe87o4e1.
 
-- Создадим в этой публичной подсети (виртуалку с публичным IP)[./config/public.tf].
+- Создадим в этой публичной подсети [виртуалку с публичным IP](./config/public.tf).
 
 1. Приватная подсеть.
 
@@ -77,7 +77,7 @@ resource "yandex_vpc_route_table" "private-route" {
 }
 ```
 
-- Создадим в этой приватной подсети (виртуалку с внутренним IP)[./config/private.tf].
+- Создадим в этой приватной подсети [виртуалку с внутренним IP](./config/private.tf).
 
 Выполним команду `terraform apply`
 <details>
