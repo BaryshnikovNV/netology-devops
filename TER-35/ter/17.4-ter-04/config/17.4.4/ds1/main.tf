@@ -2,9 +2,28 @@ terraform {
   required_providers {
     yandex = {
       source = "yandex-cloud/yandex"
+      version = "~>0.104.0"
+    }
+    template = {
+      source = "hashicorp/template"
+      version = "~>2.2.0"
     }
   }
   required_version = ">=0.13"
+
+
+  backend "s3" {
+    endpoint = "storage.yandexcloud.net"
+    bucket   = "tfstate-new"
+    region   = "ru-central1"
+    key      = "terraform.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+
+        dynamodb_endpoint = "https://docapi.serverless.yandexcloud.net/ru-central1/b1gc5lv1oap0ommnp9nu/etnfskduul53l4opdt72"
+        dynamodb_table    = "tfstate-develop"
+  }
 }
 
 provider "yandex" {
@@ -34,7 +53,7 @@ module "vpc_dev" {
 }
 
 module "test-vm" {
-  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=main"
+  source          = "git::https://github.com/udjin10/yandex_compute_instance.git?ref=95c286e"
   env_name        = "develop"
   network_id      = module.vpc_dev.network_id
   subnet_zones    = ["ru-central1-a"]
